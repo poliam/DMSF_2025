@@ -8,6 +8,7 @@ class ReviewOfSystem extends Model
 {
     protected $fillable = [
         'patient_id',
+        'consultation_id',
         'symptoms'
     ];
 
@@ -18,5 +19,10 @@ class ReviewOfSystem extends Model
     public function patient()
     {
         return $this->belongsTo(Patient::class);
+    }
+
+    public function consultation()
+    {
+        return $this->belongsTo(Consultation::class);
     }
 } 

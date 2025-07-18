@@ -56,7 +56,8 @@
                 data: $(this).serialize(),
                 success: function(response) {
                     alert("Survey submitted successfully!");
-                    $('#telemedicine-form')[0].reset();
+                    $('#telemedicine-perception-form')[0].reset();
+                    $('#TelemedicinePerceptionModal').modal('hide');
                 },
                 error: function(xhr) {
                     alert("An error occurred. Please try again.");
@@ -85,6 +86,8 @@
                 success: function (response) {
                     alert('Form submitted successfully!');
                     $('#nutrition-form')[0].reset();
+                    $('#NutritionModal').modal('hide');
+                    location.reload(); // Refresh the page to show new data
                 },
                 error: function (xhr) {
                     alert('Error submitting form!');
@@ -163,6 +166,7 @@
 	            data: $(this).serialize(),
 	            success: function(response) {
 	                alert("Food Recall entry added successfully!");
+	                $('#foodRecallForm')[0].reset();
 	                $('#foodRecallModal').modal('hide');
 	                location.reload(); // Refresh the page
 	            },
@@ -225,7 +229,8 @@
 	            data: $(this).serialize(),
 	            success: function(response) {
 	                alert("Quality of Life entry added successfully!");
-	                $('#TelemedicinePerceptionModal').modal('hide'); // Hide modal
+	                $('#qualityOfLifeForm')[0].reset();
+	                $('#qualityOfLifeModal').modal('hide'); // Hide correct modal
 	                location.reload(); // Refresh the page
 	            },
 	            error: function(xhr) {

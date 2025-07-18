@@ -93,22 +93,14 @@
                                         <label class="form-check-label" for="hematocrit">Hematocrit</label>
                                     </div>
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="complete_blood_count" name="hematology[]" value="complete_blood_count">
-                                        <label class="form-check-label" for="complete_blood_count">Complete Blood Count</label>
+                                        <input class="form-check-input" type="checkbox" id="platelet_count" name="hematology[]" value="platelet_count">
+                                        <label class="form-check-label" for="platelet_count">Platelet Count</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="blood_typing" name="hematology[]" value="blood_typing">
-                                        <label class="form-check-label" for="blood_typing">Blood Typing</label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="differential_count" name="hematology[]" value="differential_count">
-                                        <label class="form-check-label" for="differential_count">Differential Count</label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="bsmp" name="hematology[]" value="bsmp">
-                                        <label class="form-check-label" for="bsmp">BSMP</label>
+                                        <input class="form-check-input" type="checkbox" id="cbc" name="hematology[]" value="cbc">
+                                        <label class="form-check-label" for="cbc">CBC</label>
                                     </div>
                                 </div>
                             </div>
@@ -127,18 +119,14 @@
                                         <label class="form-check-label" for="urinalysis">Urinalysis</label>
                                     </div>
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="fecalysis" name="clinical_microscopy[]" value="fecalysis">
-                                        <label class="form-check-label" for="fecalysis">Fecalysis</label>
+                                        <input class="form-check-input" type="checkbox" id="pregnancy_test" name="clinical_microscopy[]" value="pregnancy_test">
+                                        <label class="form-check-label" for="pregnancy_test">Pregnancy Test</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="pregnancy_test" name="clinical_microscopy[]" value="pregnancy_test">
-                                        <label class="form-check-label" for="pregnancy_test">Pregnancy Test</label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="semenalysis" name="clinical_microscopy[]" value="semenalysis">
-                                        <label class="form-check-label" for="semenalysis">Semenalysis</label>
+                                        <input class="form-check-input" type="checkbox" id="semen_analysis" name="clinical_microscopy[]" value="semen_analysis">
+                                        <label class="form-check-label" for="semen_analysis">Semen Analysis</label>
                                     </div>
                                 </div>
                             </div>
@@ -154,45 +142,45 @@
                                 <div class="col-md-6">
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" type="checkbox" id="fbs_rbs" name="blood_chemistry[]" value="fbs_rbs">
-                                        <label class="form-check-label" for="fbs_rbs">FBS/RBS</label>
+                                        <label class="form-check-label" for="fbs_rbs">FBS/RBS (Blood Sugar)</label>
                                     </div>
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" type="checkbox" id="lipid_profile" name="blood_chemistry[]" value="lipid_profile">
                                         <label class="form-check-label" for="lipid_profile">Lipid Profile</label>
                                     </div>
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="serum_uric_acid" name="blood_chemistry[]" value="serum_uric_acid">
-                                        <label class="form-check-label" for="serum_uric_acid">Serum Uric Acid (SUA)</label>
+                                        <input class="form-check-input" type="checkbox" id="bun" name="blood_chemistry[]" value="bun">
+                                        <label class="form-check-label" for="bun">BUN</label>
                                     </div>
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" type="checkbox" id="creatinine" name="blood_chemistry[]" value="creatinine">
                                         <label class="form-check-label" for="creatinine">Creatinine</label>
                                     </div>
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="sgpt_alt" name="blood_chemistry[]" value="sgpt_alt">
-                                        <label class="form-check-label" for="sgpt_alt">SGPT/ALT</label>
+                                        <input class="form-check-input" type="checkbox" id="uric_acid" name="blood_chemistry[]" value="uric_acid">
+                                        <label class="form-check-label" for="uric_acid">Uric Acid</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="sgot" name="blood_chemistry[]" value="sgot">
+                                        <label class="form-check-label" for="sgot">SGOT</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="sgot_ast" name="blood_chemistry[]" value="sgot_ast">
-                                        <label class="form-check-label" for="sgot_ast">SGOT/AST</label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="bun" name="blood_chemistry[]" value="bun">
-                                        <label class="form-check-label" for="bun">BUN</label>
+                                        <input class="form-check-input" type="checkbox" id="sgpt" name="blood_chemistry[]" value="sgpt">
+                                        <label class="form-check-label" for="sgpt">SGPT</label>
                                     </div>
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" type="checkbox" id="hba1c" name="blood_chemistry[]" value="hba1c">
-                                        <label class="form-check-label" for="hba1c">HbA1C</label>
+                                        <label class="form-check-label" for="hba1c">HbA1c</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="ogtt" name="blood_chemistry[]" value="ogtt">
+                                        <label class="form-check-label" for="ogtt">OGTT (Oral Glucose Tolerance Test)</label>
                                     </div>
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" type="checkbox" id="serum_electrolytes" name="blood_chemistry[]" value="serum_electrolytes">
                                         <label class="form-check-label" for="serum_electrolytes">Serum Electrolytes</label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="ogtt" name="blood_chemistry[]" value="ogtt">
-                                        <label class="form-check-label" for="ogtt">OGTT</label>
                                     </div>
                                 </div>
                             </div>
@@ -211,18 +199,22 @@
                                         <label class="form-check-label" for="gram_stain">Gram Stain</label>
                                     </div>
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="sputum_genexpert" name="microbiology[]" value="sputum_genexpert">
-                                        <label class="form-check-label" for="sputum_genexpert">Sputum GeneXpert</label>
+                                        <input class="form-check-input" type="checkbox" id="sputum_afb" name="microbiology[]" value="sputum_afb">
+                                        <label class="form-check-label" for="sputum_afb">Sputum AFB</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="genexpert" name="microbiology[]" value="genexpert">
+                                        <label class="form-check-label" for="genexpert">GeneXpert</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="koh" name="microbiology[]" value="koh">
-                                        <label class="form-check-label" for="koh">KOH</label>
+                                        <input class="form-check-input" type="checkbox" id="koh_test" name="microbiology[]" value="koh_test">
+                                        <label class="form-check-label" for="koh_test">KOH Test</label>
                                     </div>
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="slit_skin_smear" name="microbiology[]" value="slit_skin_smear">
-                                        <label class="form-check-label" for="slit_skin_smear">Slit Skin Smear (SSS)</label>
+                                        <input class="form-check-input" type="checkbox" id="sss" name="microbiology[]" value="sss">
+                                        <label class="form-check-label" for="sss">SSS</label>
                                     </div>
                                 </div>
                             </div>
@@ -237,30 +229,74 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="hbsag_qualitative" name="immunology_serology[]" value="hbsag_qualitative">
-                                        <label class="form-check-label" for="hbsag_qualitative">HBsAg Qualitative</label>
+                                        <input class="form-check-input" type="checkbox" id="hbsag" name="immunology_serology[]" value="hbsag">
+                                        <label class="form-check-label" for="hbsag">HBsAg</label>
                                     </div>
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="syphilis_rpr_qualitative" name="immunology_serology[]" value="syphilis_rpr_qualitative">
-                                        <label class="form-check-label" for="syphilis_rpr_qualitative">Syphilis/RPR Qualitative</label>
+                                        <input class="form-check-input" type="checkbox" id="hiv" name="immunology_serology[]" value="hiv">
+                                        <label class="form-check-label" for="hiv">HIV</label>
                                     </div>
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="dengue_rdt" name="immunology_serology[]" value="dengue_rdt">
-                                        <label class="form-check-label" for="dengue_rdt">Dengue RDT</label>
+                                        <input class="form-check-input" type="checkbox" id="syphilis" name="immunology_serology[]" value="syphilis">
+                                        <label class="form-check-label" for="syphilis">Syphilis</label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="rpr" name="immunology_serology[]" value="rpr">
+                                        <label class="form-check-label" for="rpr">RPR</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="hiv_qualitative" name="immunology_serology[]" value="hiv_qualitative">
-                                        <label class="form-check-label" for="hiv_qualitative">HIV-1/2 Qualitative</label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="fecal_occult_blood_test" name="immunology_serology[]" value="fecal_occult_blood_test">
-                                        <label class="form-check-label" for="fecal_occult_blood_test">Fecal Occult Blood Test</label>
+                                        <input class="form-check-input" type="checkbox" id="dengue_rdt" name="immunology_serology[]" value="dengue_rdt">
+                                        <label class="form-check-label" for="dengue_rdt">Dengue RDT</label>
                                     </div>
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" type="checkbox" id="malaria_rdt" name="immunology_serology[]" value="malaria_rdt">
-                                        <label class="form-check-label" for="malaria_rdt">Malaria P.f/Pan RDT</label>
+                                        <label class="form-check-label" for="malaria_rdt">Malaria RDT</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Stool Tests Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Stool Tests</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="fecalysis" name="stool_tests[]" value="fecalysis">
+                                        <label class="form-check-label" for="fecalysis">Fecalysis</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="fobt" name="stool_tests[]" value="fobt">
+                                        <label class="form-check-label" for="fobt">Fecal Occult Blood Test (FOBT)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Blood Typing/BSMP Section -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Blood Typing/BSMP</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="blood_typing" name="blood_typing_bsmp[]" value="blood_typing">
+                                        <label class="form-check-label" for="blood_typing">Blood Typing</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="checkbox" id="bsmp" name="blood_typing_bsmp[]" value="bsmp">
+                                        <label class="form-check-label" for="bsmp">BSMP (Barangay Systematic Medical Profiling)</label>
                                     </div>
                                 </div>
                             </div>
@@ -347,7 +383,7 @@ $(document).ready(function() {
         const form = $(this)[0];
         const formData = new FormData(form);
         // Convert array fields to JSON
-        ['hematology','clinical_microscopy','blood_chemistry','microbiology','immunology_serology'].forEach(function(field) {
+        ['hematology','clinical_microscopy','blood_chemistry','microbiology','immunology_serology','stool_tests','blood_typing_bsmp'].forEach(function(field) {
             const values = formData.getAll(field + '[]');
             formData.delete(field + '[]');
             if (values.length > 0) {

@@ -98,7 +98,7 @@
     <table class="diagnostic-table">
         @if(!empty($diagnostic->hematology) && count($diagnostic->hematology) > 0)
         <tr>
-            <td class="category-header">HEMATOLOGY</td>
+            <td class="category-header">🩸 HEMATOLOGY (Dugo)</td>
         </tr>
         <tr>
             <td class="test-list">
@@ -118,7 +118,7 @@
 
         @if(!empty($diagnostic->clinical_microscopy) && count($diagnostic->clinical_microscopy) > 0)
         <tr>
-            <td class="category-header">CLINICAL MICROSCOPY</td>
+            <td class="category-header">CLINICAL MICROSCOPY (Ihi, Semilya, Ihi Para sa Buntis)</td>
         </tr>
         <tr>
             <td class="test-list">
@@ -128,21 +128,21 @@
                 @endforeach
                 <br><br>
             @if(in_array('urinalysis', $diagnostic->clinical_microscopy))
-            <p class="bold-text">• Urinalysis:</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Kolektaha ang" midstream" o tunga tunga nga ihi gamit ang limpyo ug sterile nga botelya.</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Mas maayo kung unang ihi sa buntag ang gamiton.</p>
+            <p class="bold-text">• Urinalysis(Ihi):</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Kolektaha ang tunga-tunga nga ihi gamit ang limpyo nga botelya.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Mas maayo gamiton ang unang ihi sa buntag</p>
             @endif
 
             @if(in_array('pregnancy_test', $diagnostic->clinical_microscopy))
-            <p class="bold-text">• Pregnancy Test:</p>
+            <p class="bold-text">• Pregnancy Test (Ihi Para sa Buntis):</p>
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;• Gamiton ang unang ihi sa buntag para mas klaro ang resulta.</p>
             @endif
 
-            @if(in_array('semenalysis', $diagnostic->clinical_microscopy))
-            <p class="bold-text">• Semen Analysis:</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Likayi ang pakighilawas sulod sa 2–7 ka adlaw sa wala pa ang test.</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Kolektahi ang semilya sa sterile nga botelya.</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dalha dayon sa laboratoryo sulod sa 30–60 minutos, itipig sa lawas nga temperatura.</p>
+            @if(in_array('semen_analysis', $diagnostic->clinical_microscopy))
+            <p class="bold-text">• Semen Analysis (Semilya):</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Likayi ang pakighilawas sulod sa 2–7 ka adlaw sa wala pa magpa-test.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Kolektaha ang semilya sa limpyo nga botelya..</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dalha dayon sa laboratoryo sulod sa 30–60 minutos, itipig duol sa lawas para dili mabugnaw.</p>
             @endif
             </td>
         </tr>
@@ -150,7 +150,7 @@
 
         @if(!empty($diagnostic->blood_chemistry) && count($diagnostic->blood_chemistry) > 0)
         <tr>
-            <td class="category-header">BLOOD CHEMISTRY</td>
+            <td class="category-header">BLOOD CHEMISTRY (Dugo para sa asukal ug uban pa)</td>
         </tr>
         <tr>
             <td class="test-list">
@@ -164,44 +164,44 @@
                     <tr>
                         <td style="width: 50%; vertical-align: top; border: none; padding-right: 10px;">
                             @if(in_array('fbs_rbs', $diagnostic->blood_chemistry))
-                            <p class="bold-text">• FBS/RBS (Fasting/Random Blood Sugar):</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Fasting: Walay kaon o imnon (gawas sa tubig) sulod sa 8–10 ka oras.</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Random: Dili kinahanglan mag-fasting.</p>
+                            <p class="bold-text">• FBS/RBS (Blood Sugar):</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Fasting: Walay kaon o imnon gawas sa tubig sulod sa 8–10 ka oras.</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Random: Dili kinahanglan maglaming/fasting</p>
                             @endif
 
                             @if(in_array('lipid_profile', $diagnostic->blood_chemistry))
                             <p class="bold-text">• Lipid Profile:</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Mag-fasting sulod sa 10–12 ka oras.</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Maglaming/fasting sulod sa 10–12 ka oras.</p>
                             @endif
 
-                            @if(in_array('bun', $diagnostic->blood_chemistry) || in_array('creatinine', $diagnostic->blood_chemistry) || in_array('serum_uric_acid', $diagnostic->blood_chemistry))
-                            <p class="bold-text">• BUN / Creatinine / SUA (Uric Acid):</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Mag-fasting sulod sa 8–10 ka oras.</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Imna og tubig kung tugutan sa health worker.</p>
+                            @if(in_array('bun', $diagnostic->blood_chemistry) || in_array('creatinine', $diagnostic->blood_chemistry) || in_array('uric_acid', $diagnostic->blood_chemistry))
+                            <p class="bold-text">• BUN / Creatinine / Uric Acid:</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Maglaming/fasting sulod sa 8–10 ka oras.</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Inom lang ug tubig kung tugutan sa health worker.</p>
                             @endif
 
-                            @if(in_array('sgot_ast', $diagnostic->blood_chemistry) || in_array('sgpt_alt', $diagnostic->blood_chemistry))
-                            <p class="bold-text">• SGOT / AST ug SGPT / ALT:</p>
+                            @if(in_array('sgot', $diagnostic->blood_chemistry) || in_array('sgpt', $diagnostic->blood_chemistry))
+                            <p class="bold-text">• SGOT / SGPT (Atay):</p>
                             <p>&nbsp;&nbsp;&nbsp;&nbsp;• Wala'y espesyal nga preparasyon.</p>
                             @endif
                         </td>
                         
                         <td style="width: 50%; vertical-align: top; border: none; padding-left: 10px;">
                             @if(in_array('hba1c', $diagnostic->blood_chemistry))
-                            <p class="bold-text">• HbA1c:</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dili kinahanglan og fasting.</p>
+                            <p class="bold-text">• HbA1c (Asukal sa Dugo sa Miaging 3 Ka Buwan):</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dili kinahanglan maglaming/fasting.</p>
                             @endif
 
                             @if(in_array('ogtt', $diagnostic->blood_chemistry))
                             <p class="bold-text">• OGTT (Oral Glucose Tolerance Test):</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Mag-fasting sulod sa 8–10 ka oras.</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Human kuhaan og dugo, painmon og glucose solution.</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Sunod nga kuha sa dugo human sa 1 ug 2 ka oras.</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Maglaming/fasting sulod sa 8–10 ka oras.</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Human kuhaan og dugo, painmon ka nila og glucose solution (tam-is kaayo nga tubig).</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Kuhaon usab ug dugo human sa 1 ka oras ug 2 ka oras na pud.</p>
                             @endif
 
                             @if(in_array('serum_electrolytes', $diagnostic->blood_chemistry))
                             <p class="bold-text">• Serum Electrolytes:</p>
-                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dili kinahanglan og fasting.</p>
+                            <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dili kinahanglan maglaming/fasting.</p>
                             @endif
                         </td>
                     </tr>
@@ -213,7 +213,7 @@
 
         @if(!empty($diagnostic->microbiology) && count($diagnostic->microbiology) > 0)
         <tr>
-            <td class="category-header">MICROBIOLOGY</td>
+            <td class="category-header">MICROBIOLOGY (Plema, Panit, Uban Pa)</td>
         </tr>
         <tr>
             <td class="test-list">
@@ -225,20 +225,18 @@
                 
                 @if(in_array('gram_stain', $diagnostic->microbiology))
                 <p class="bold-text">• Gram Stain:</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Depende sa sample (e.g., tutunlan, samad, uban pa).</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Sundon ang tukmang instruction sa health worker.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Sundon ang instruction sa health worker depende sa sample.</p>
                 @endif
 
-                @if(in_array('sputum_genexpert', $diagnostic->microbiology))
-                <p class="bold-text">• Sputum AFB / GeneXpert:</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Kolektahi ang plema buntag sa wala pa mag-toothbrush o mokaon.</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Pahiran ang baba gamit tubig, dayon hikapa og lalom ang ubo aron mogawas ang plema (dili laway).</p>
+                @if(in_array('sputum_afb', $diagnostic->microbiology) || in_array('genexpert', $diagnostic->microbiology))
+                <p class="bold-text">• Sputum AFB / GeneXpert (Plema para sa TB):</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Kolektaha ang plema buntag sa wala pa magkaon o magtoothbrush.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Hugasi ang baba gamit tubig, dayon hikapa ang lalom nga ubo para mugawas ang plema (ayaw apila ang laway).</p>
                 @endif
 
-                @if(in_array('koh', $diagnostic->microbiology))
-                <p class="bold-text">• KOH Test / SSS (Slit Skin Smear):</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Wala'y kinahanglan nga preparasyon.</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Ang health worker ang mukuha sa sample sa panit.</p>
+                @if(in_array('koh_test', $diagnostic->microbiology) || in_array('sss', $diagnostic->microbiology))
+                <p class="bold-text">• KOH Test / SSS (Slit Skin Smear para sa Panit):</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Walay preparasyon, ang health worker ang mukuha sa sample</p>
                 @endif
 
             </td>
@@ -247,7 +245,7 @@
 
         @if(!empty($diagnostic->immunology_serology) && count($diagnostic->immunology_serology) > 0)
         <tr>
-            <td class="category-header">IMMUNOLOGY/SEROLOGY</td>
+            <td class="category-header">IMMUNOLOGY/SEROLOGY (Dugo para sa TB, HIV, Syphilis, RPR, Dengue, Malaria)</td>
         </tr>
         <tr>
             <td class="test-list">
@@ -256,12 +254,66 @@
                      {{ ucwords(str_replace('_', ' ', $test)) }} |
                 @endforeach
                 <br>
-                <p class="bold-text">• HBsAg Qualitative / HIV 1/2 Qualitative / Syphilis / RPR:</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dili kinahanglan og fasting.</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Naay pre ug post-test counseling depende sa test.</p>
+                <p class="bold-text">• HBsAg / HIV / Syphilis / RPR:</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dili kinahanglan maglaming/fasting.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Mag counseling bag-o ug paghuman sa test so ayaw sa ug uli dayon.</p>
                 <p class="bold-text">• Dengue RDT / Malaria RDT:</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dili kinahanglan og fasting.</p>
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Ingna ang staff kung naay hilanat, kalibanga, rashes, o kasukaon.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Dili kinahanglan maglaming/fasting.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Ingna ang staff kung naay hilanat, rashes/pantal-pantal kalibanga, o kasukaon.</p>
+            </td>
+        </tr>
+        @endif
+
+        @if(!empty($diagnostic->stool_tests) && count($diagnostic->stool_tests) > 0)
+        <tr>
+            <td class="category-header">STOOL TESTS (Tae)</td>
+        </tr>
+        <tr>
+            <td class="test-list">
+                •
+                @foreach($diagnostic->stool_tests as $test)
+                     {{ ucwords(str_replace('_', ' ', $test)) }} |
+                @endforeach
+                <br>
+                
+                @if(in_array('fecalysis', $diagnostic->stool_tests))
+                <p class="bold-text">• Fecalysis:</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Kolektaha ang bag-ong tae sa limpyo nga sudlanan ug sirad-a kini ug tarong. Siguraduha maghugas ug kamot pagkahuman.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• I-hatag dayon sulod sa 1 ka oras, o ibutang sa ref kung madugay.</p>
+                @endif
+
+                @if(in_array('fobt', $diagnostic->stool_tests))
+                <p class="bold-text">• Fecal Occult Blood Test (FOBT):</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Likayi ang pagkaon og pula nga karne, dahonon nga gulay, ug vitamin C sulod sa 2–3 ka adlaw kung gikinahanglan.</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Sundon ang instruction kung gi-tagaan og kit.</p>
+                @endif
+
+            </td>
+        </tr>
+        @endif
+
+        @if(!empty($diagnostic->blood_typing_bsmp) && count($diagnostic->blood_typing_bsmp) > 0)
+        <tr>
+            <td class="category-header">BLOOD TYPING / BSMP</td>
+        </tr>
+        <tr>
+            <td class="test-list">
+                •
+                @foreach($diagnostic->blood_typing_bsmp as $test)
+                     {{ ucwords(str_replace('_', ' ', $test)) }} |
+                @endforeach
+                <br>
+                
+                @if(in_array('blood_typing', $diagnostic->blood_typing_bsmp))
+                <p class="bold-text">• Blood Typing:</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Wala’y espesyal nga preparasyon.</p>
+                @endif
+
+                @if(in_array('bsmp', $diagnostic->blood_typing_bsmp))
+                <p class="bold-text">• BSMP (Barangay Systematic Medical Profiling):</p>
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;• Sundon ang instruction sa health worker.</p>
+                @endif
+
             </td>
         </tr>
         @endif
@@ -277,6 +329,20 @@
             </td>
         </tr>
         @endif
+
+        <tr>
+            <td class="category-header" style="color: #b22222;">IMPORTANTE NGA PANUMDOM</td>
+        </tr>
+        <tr>
+            <td class="test-list">
+                <ul style="margin-bottom: 0;">
+                    <li>Dad-a ang valid ID ug lab request form.</li>
+                    <li>Moabot sayo kung kinahanglan maglaming/fasting.</li>
+                    <li>Sul-ob og hapsay ug komportableng sinina nga dali ra makuhaan ug dugo.</li>
+                    <li>Ingna ang health staff kung buntis, naay tambal nga ginainom, o adunay sakit nga kinahanglan ipahibalo.</li>
+                </ul>
+            </td>
+        </tr>
     </table>
 
     <div class="footer">

@@ -33,8 +33,8 @@ return new class extends Migration
             
             $table->timestamps();
             
-            // Unique constraint to ensure only one measurement per patient per date per tab
-            $table->unique(['patient_id', 'measurement_date', 'tab_number'], 'patient_measurements_unique');
+            // Unique constraint to ensure only one measurement per patient per tab
+            $table->unique(['patient_id', 'tab_number'], 'patient_measurements_unique');
         });
     }
 

@@ -28,6 +28,8 @@ class DiagnosticController extends Controller
             'blood_chemistry' => 'nullable|array',
             'microbiology' => 'nullable|array',
             'immunology_serology' => 'nullable|array',
+            'stool_tests' => 'nullable|array',
+            'blood_typing_bsmp' => 'nullable|array',
             'others' => 'nullable|string|max:1000',
         ]);
         $diagnostic = Diagnostic::create([
@@ -39,6 +41,8 @@ class DiagnosticController extends Controller
             'blood_chemistry' => $validated['blood_chemistry'] ?? [],
             'microbiology' => $validated['microbiology'] ?? [],
             'immunology_serology' => $validated['immunology_serology'] ?? [],
+            'stool_tests' => $validated['stool_tests'] ?? [],
+            'blood_typing_bsmp' => $validated['blood_typing_bsmp'] ?? [],
             'others' => $validated['others'] ?? null,
         ]);
         return response()->json(['success' => true, 'diagnostic' => $diagnostic]);

@@ -19,7 +19,6 @@ class PhysicalActivityController extends Controller
             'days' => 'required|array',
             'hours' => 'required|array',
             'minutes' => 'required|array',
-            'other_value' => 'required|array',
         ]);
 
         // Create the main PhysicalActivity record

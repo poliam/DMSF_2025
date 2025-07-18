@@ -1,22 +1,69 @@
+<style>
+    .white-bordered-table,
+    .white-bordered-table th,
+    .white-bordered-table td {
+        border: 1px solid #fff !important;
+    }
+</style>
 <div class="card shadow-lg p-4 border-0">
     <!-- Flex container for heading and button -->
     <div class="d-flex justify-content-between align-items-center">
         <h5>Quality of Life Results</h5>
-
-        <button type="button" class="bg-[#7CAD3E] hover:bg-[#1A5D77] text-white border-none px-3 py-2 rounded-full text-base mt-3 mb-3 cursor-pointer transition-colors duration-300" data-bs-toggle="modal" data-bs-target="#QualityOfLifeModal">
+		
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#QualityOfLifeModal">
             Add Quality of Life
         </button>
     </div>
 		<div class="alert alert-info">
-            <h6 class="alert-heading mb-2">EQ-5D-5L Health Status Assessment</h6>
-            <p class="mb-2">A standardized measure of health status with two components:</p>
-            <ol class="mb-2">
-                <li><strong>Descriptive System:</strong> Five dimensions (MOBILITY, SELF-CARE, USUAL ACTIVITIES, PAIN/DISCOMFORT, ANXIETY/DEPRESSION) with five severity levels each</li>
-                <li><strong>Visual Analogue Scale (VAS):</strong> Patient rates perceived health from 0 (worst) to 100 (best)</li>
-            </ol>
-
-            <h6 class="alert-heading mb-2">Scoring System</h6>
-            <p class="mb-2">Health states are represented by 5-digit codes (e.g., 12345) or index values based on population preferences. Total possible states: 3,125.</p>
+            <h6 class="alert-heading mb-2 font-weight-bold">EQ-5D-5L Health Status Assessment</h6>
+            <p class="mb-2">The EQ-5D-5L is a widely used generic measure of health status consisting of two parts. The first part (the descriptive system) assesses health in five dimensions (MOBILITY, SELF-CARE, USUAL ACTIVITIES, PAIN / DISCOMFORT, ANXIETY / DEPRESSION), each of which has five levels of response (no problems, slight problems, moderate problems, severe problems, extreme problems/unable to). This part of the EQ-5D questionnaire provides a descriptive profile that can be used to generate a health state profile. The second part of the questionnaire consists of a visual analogue scale (VAS) on which the patient rates his/her perceived health from 0 (the worst imaginable health) to 100 (the best imaginable health). Patients are grouped based on their EQ-5D-5L index, Level Sum Score (LSS), or Visual Analogue Scale (EQ-VAS).</p>
+			<br>
+            <h6 class="alert-heading mb-2 font-weight-bold">Scoring System</h6>
+            <table class="table table-bordered mb-3 white-bordered-table">
+                <thead>
+                    <tr>
+                        <th>Index Score</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&gt;0.8 – 1.0</td>
+                        <td>High Quality of Life</td>
+                    </tr>
+                    <tr>
+                        <td>0.5 – 0.79</td>
+                        <td>Moderate Quality of Life</td>
+                    </tr>
+                    <tr>
+                        <td>&lt;0.5</td>
+                        <td>Low Quality of Life</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered white-bordered-table">
+                <thead>
+                    <tr>
+                        <th>VAS Score</th>
+                        <th>Health Perception</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>80 – 100</td>
+                        <td>High Perceived Health</td>
+                    </tr>
+                    <tr>
+                        <td>50 – 79</td>
+                        <td>Moderate Perceived Health</td>
+                    </tr>
+                    <tr>
+                        <td>0 – 49</td>
+                        <td>Low Perceived Health</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
 
             <h6 class="alert-heading mb-2">Reference Materials</h6>
             <ul class="mb-2">
@@ -52,11 +99,11 @@
                     </ul>
                 </div>
             </div>
-        =</div>
+        </div>
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
-                <th>Score</th>
+                <th>Score</th>				      
                 <th>Health Today</th>
                 <th>ICD-10</th>
             </tr>

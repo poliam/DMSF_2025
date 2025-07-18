@@ -25,6 +25,14 @@
 		</div>
 		<div class="col-4 mb-3">
 			<p class="text-muted mb-1">
+				Macronutrient Split 
+				<button class="btn btn-light btn-sm open-macro-modal" data-patient-id="{{ $patient->id }}">
+					<i class="fa-solid fa-eye"></i>
+				</button>
+			</p>
+		</div>
+		<div class="col-4 mb-3">
+            <p class="text-muted mb-1">
 				Meal Plan
 				<button class="btn btn-light btn-sm open-meal-plan-modal" data-patient-id="{{ $patient->id }}">
 					<i class="fa-solid fa-eye"></i>
@@ -32,11 +40,25 @@
 			</p>
 		</div>
 		<div class="col-4 mb-3">
-			<p class="text-muted mb-1">
-				Macronutrient Split
-				<button class="btn btn-light btn-sm open-macro-modal" data-patient-id="{{ $patient->id }}">
-					<i class="fa-solid fa-eye"></i>
-				</button>
+            <p class="text-muted mb-1">
+				24hrs Food Recall
+				@if($patient->nutritions()->exists())
+					@php $latestNutrition = $patient->nutritions()->latest()->first(); @endphp
+					<button class="btn btn-warning btn-sm open-foodrecall-modal" 
+						data-nutrition-id="{{ $latestNutrition->id }}" 
+						data-bs-toggle="modal" 
+						data-bs-target="#foodRecallModal">
+						<i class="fa-solid fa-plus"></i>
+					</button>
+					<button class="btn btn-light btn-sm open-viewfoodrecall-modal"
+						data-bs-toggle="modal" 
+						data-bs-target="#ViewfoodRecallModal" 
+						data-nutrition-id="{{ $latestNutrition->id }}">
+						<i class="fa-solid fa-eye"></i>
+					</button>
+				@else
+					<span class="text-muted small">No nutrition records</span>
+				@endif
 			</p>
 		</div>
 	</div>
@@ -45,25 +67,24 @@
 <div class="card shadow-lg p-4 border-0">
     <div class="d-flex justify-content-between align-items-center">
         <h5>Nutrition Results</h5>
-        <button type="button" class="bg-[#7CAD3E] hover:bg-[#1A5D77] text-white border-none px-3 py-2 rounded-full text-base mt-3 mb-3 cursor-pointer transition-colors duration-300" data-bs-toggle="modal" data-bs-target="#NutritionModal">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#NutritionModal">
             Add Nutrition
         </button>
     </div>
     <div class="alert alert-info">
-            <h6 class="alert-heading mb-2">Short Healthy Eating Index (SHEI-22)</h6>
-            <p class="mb-2">A 22-item tool that assesses dietary quality and adherence to healthy eating patterns. Each component is scored on a 0-10 scale, with higher scores indicating healthier eating behaviors. Takes 10-15 minutes to complete.</p>
+            <h6 class="alert-heading mb-2 font-weight-bold">Short Healthy Eating Index (SHEI-22)</h6>
+            <p class="mb-2">The SHEI‑22 is a concise, 22-item dietary quality assessment tool designed to estimate individuals’ adherence to healthy eating patterns in a user-friendly and efficient manner. Developed through expert panels and decision-tree algorithms, it correlates strongly (r = 0.79) with the full Healthy Eating Index derived from 24-hour dietary recalls. SHEI‑22 also shows moderate to strong validity (r = 0.44–0.64) for key food group intake estimates. It boasts high content validity, internal consistency (Cronbach’s α ≈ 0.80–0.81), and structural validity across diverse populations including college students and international samples.</p>
 
-            <h6 class="alert-heading mb-2">Scoring Guide</h6>
+            <h6 class="alert-heading mb-2 font-weight-bold">Scoring Guide</h6>
             <p class="mb-2">Total Dietary Quality Score (0-100) is calculated as:</p>
-            <p class="mb-2">total_fruits + whole_fruits + tot_veg + greens_beans + whole_grains + dairy + tot_proteins + seafood_plant + fatty_acid + refined_grains + sodium + added_sugars + sat_fat</p>
-
-            <h6 class="alert-heading mb-2">ICD-10 Diagnosis</h6>
+            <p class="mb-2">tot_score = total_fruits + whole_fruits + tot_veg + greens_beans + whole_grains + dairy + tot_proteins + seafood_plant + fatty_acid + refined_grains + sodium + added_sugars + sat_fat</p>
+            
+            <h6 class="alert-heading mb-2 font-weight-bold">ICD-10 Diagnosis</h6>
             <p class="mb-2">Z72.4 - Inappropriate Diet and Eating Habits</p>
-
+            
             <small class="text-muted">
-                For detailed scoring criteria of each food group, refer to: <br>
-                https://pmc.ncbi.nlm.nih.gov/articles/PMC7551037/ <br>
-https://pmc.ncbi.nlm.nih.gov/articles/PMC7551037/table/array1/
+                For detailed scoring criteria of each food group, refer to: <br> 
+                https://pmc.ncbi.nlm.nih.gov/articles/PMC7551037/table/array1/ 
             </small>
     </div>
     @if($patient->nutritions()->exists())
@@ -72,9 +93,7 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC7551037/table/array1/
                     <tr>
                         <th>Date</th>
                         <th>Score</th>
-                        <th>ICD 10</th>
                         <th>Details</th>
-                        <th style="text-align: center;">24hrs food Recall</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -82,9 +101,8 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC7551037/table/array1/
                     <tr>
                         <td>{{ \Carbon\Carbon::parse($nutrition->created_at)->format('M d, Y') }}</td>
                         <td>{{ $nutrition->dq_score }}</td>
-                        <td>{{ $nutrition->icd_diagnosis }}</td>
                         <td>
-                            <button class="btn btn-info btn-sm view-nutrition-details"
+                            <button class="btn btn-info btn-sm view-nutrition-details" 
                                     data-date="{{ \Carbon\Carbon::parse($nutrition->created_at)->format('M d, Y') }}"
                                     data-fruit="{{ $nutrition->fruit }}"
                                     data-fruit_juice="{{ $nutrition->fruit_juice }}"
@@ -108,25 +126,10 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC7551037/table/array1/
                                     data-added_sugars="{{ $nutrition->added_sugars }}"
                                     data-saturated_fat="{{ $nutrition->saturated_fat }}"
                                     data-water="{{ $nutrition->water }}"
-                                    data-bs-toggle="modal"
+                                    data-bs-toggle="modal" 
                                     data-bs-target="#viewNutritionModal">
                                 View Details
                             </button>
-                        </td>
-                        <td style="text-align: center;">
-                                <button class="btn btn-warning btn-sm open-foodrecall-modal"
-                                data-nutrition-id="{{ $nutrition->id }}"
-                                data-bs-toggle="modal"
-                                data-bs-target="#foodRecallModal">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-                            <button class="btn btn-light btn-sm open-viewfoodrecall-modal"
-                                data-bs-toggle="modal"
-                                data-bs-target="#ViewfoodRecallModal"
-                                data-nutrition-id="{{ $nutrition->id }}">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-
                         </td>
                     </tr>
                     @endforeach
@@ -137,7 +140,7 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC7551037/table/array1/
         @endif
 </div>
 
-<!-- Telemedicine Perception Modal -->
+<!-- Nutritional Modal -->
 <div class="modal fade" id="NutritionModal" tabindex="-1" aria-labelledby="NutritionModalabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -146,7 +149,7 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC7551037/table/array1/
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-				<!-- Telemedicine Form -->
+				<!-- Nutritional Form -->
 			    @include('patients.screeningtool.forms.nutrition_form')
             </div>
         </div>
@@ -221,7 +224,7 @@ https://pmc.ncbi.nlm.nih.gov/articles/PMC7551037/table/array1/
                 <form id="foodRecallForm">
                     @csrf
                     <input type="hidden" id="nutrition_id" name="nutrition_id">
-
+                    
                     <div class="mb-3">
                         <label class="form-label">Breakfast</label>
                         <textarea class="form-control" name="breakfast"></textarea>

@@ -41,19 +41,20 @@ class TdeeController extends Controller
             'activity_level' => 'required|string'
         ]);
 
-        $patient = Patient::findOrFail($request->patient_id);
+        $patient = Patient::with('patientMeasurements')->findOrFail($request->patient_id);
+        $latestMeasurement = $patient->getLatestMeasurement();
 
-        if (!$patient->weight_kg || !$patient->height || !$patient->age || !$patient->gender) {
-            return response()->json(['message' => 'Incomplete patient data.'], 400);
+        if (!$latestMeasurement || !$latestMeasurement->weight_kg || !$latestMeasurement->height || !$patient->age || !$patient->gender) {
+            return response()->json(['message' => 'Incomplete patient measurement data. Please ensure weight, height, age, and gender are recorded.'], 400);
         }
 
-        // Convert meters to cm
-        $heightInMeters = $patient->height * 100;
+        // Convert meters to cm for BMR calculation
+        $heightInCm = $latestMeasurement->height * 100;
 
-        // Calculate BMR
+        // Calculate BMR using Mifflin-St Jeor Equation
         $bmr = strtolower($patient->gender) === 'male'
-            ? (10 * $patient->weight_kg) + (6.25 * $heightInMeters) - (5 * $patient->age) + 5
-            : (10 * $patient->weight_kg) + (6.25 * $heightInMeters) - (5 * $patient->age) - 161;
+            ? (10 * $latestMeasurement->weight_kg) + (6.25 * $heightInCm) - (5 * $patient->age) + 5
+            : (10 * $latestMeasurement->weight_kg) + (6.25 * $heightInCm) - (5 * $patient->age) - 161;
 
         // Activity level multipliers
         $multipliers = [

@@ -18,6 +18,8 @@ class Diagnostic extends Model
         'blood_chemistry',
         'microbiology',
         'immunology_serology',
+        'stool_tests',
+        'blood_typing_bsmp',
         'others',
     ];
 
@@ -27,6 +29,8 @@ class Diagnostic extends Model
         'blood_chemistry' => 'array',
         'microbiology' => 'array',
         'immunology_serology' => 'array',
+        'stool_tests' => 'array',
+        'blood_typing_bsmp' => 'array',
     ];
 
     public function patient()

@@ -82,7 +82,7 @@ class NutritionController extends Controller
         // Compute total score
         $tot_score = $total_fruits + $whole_fruits + $tot_veg + $greens_beans + $whole_grains + $dairy + $tot_proteins + $seafood_plant + $fatty_acid + $refined_grains + $sodium + $added_sugars + $sat_fat;
 
-        Nutrition::create([
+        $nutrition = Nutrition::create([
             'patient_id' => $patient->id,
             'fruit' => $request->fruit,
             'fruit_juice' => $request->fruit_juice,
@@ -90,26 +90,30 @@ class NutritionController extends Controller
             'green_vegetables' => $request->green_vegetables,
             'starchy_vegetables' => $request->starchy_vegetables,
             'grains' => $request->grains,
-            'grains_frequency' => $request->grains_frequency,
+            'grains_frequency' => $request->grains_frequency ?? 'N/A',
             'whole_grains' => $request->whole_grains,
-            'whole_grains_frequency' => $request->whole_grains_frequency,
+            'whole_grains_frequency' => $request->whole_grains_frequency ?? 'N/A',
             'milk' => $request->milk,
-            'milk_frequency' => $request->milk_frequency,
+            'milk_frequency' => $request->milk_frequency ?? 'N/A',
             'low_fat_milk' => $request->low_fat_milk,
-            'low_fat_milk_frequency' => $request->low_fat_milk_frequency,
+            'low_fat_milk_frequency' => $request->low_fat_milk_frequency ?? 'N/A',
             'beans' => $request->beans,
             'nuts_seeds' => $request->nuts_seeds,
             'seafood' => $request->seafood,
-            'seafood_frequency' => $request->seafood_frequency,
+            'seafood_frequency' => $request->seafood_frequency ?? 'N/A',
             'ssb' => $request->ssb,
-            'ssb_frequency' => $request->ssb_frequency,
+            'ssb_frequency' => $request->ssb_frequency ?? 'N/A',
             'added_sugars' => $request->added_sugars,
             'saturated_fat' => $request->saturated_fat,
             'water' => $request->water,
             'dq_score' => $tot_score,
         ]);
 
-        return redirect()->back()->with('success', 'Nutrition added successfully!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Nutrition added successfully!',
+            'data' => $nutrition
+        ]);
 
     }
 
