@@ -571,6 +571,36 @@ $(document).ready(function() {
             });
         }
 
+        // Load contraceptive detail fields - ensure they're loaded
+        if (data.contraceptive_pills_details) {
+            $('#contraceptive_pills_details').val(data.contraceptive_pills_details);
+            // Ensure the container is visible if there's data
+            if (data.contraceptive_pills_details.trim() !== '') {
+                $('#pills_details').show();
+            }
+        }
+        if (data.contraceptive_depo_details) {
+            $('#contraceptive_depo_details').val(data.contraceptive_depo_details);
+            // Ensure the container is visible if there's data
+            if (data.contraceptive_depo_details.trim() !== '') {
+                $('#depo_details').show();
+            }
+        }
+        if (data.contraceptive_implant_details) {
+            $('#contraceptive_implant_details').val(data.contraceptive_implant_details);
+            // Ensure the container is visible if there's data
+            if (data.contraceptive_implant_details.trim() !== '') {
+                $('#implant_details').show();
+            }
+        }
+
+        // Initialize contraceptive method toggles after both checkboxes and values are set
+        if (typeof window.initializeContraceptiveToggles === 'function') {
+            setTimeout(function() {
+                window.initializeContraceptiveToggles();
+            }, 50); // Small delay to ensure DOM is updated
+        }
+
         if (data.psychiatric_illness) {
             data.psychiatric_illness.forEach(function(illness) {
                 $(`input[name="psychiatric_illness[]"][value="${illness}"]`).prop('checked', true);
@@ -684,6 +714,7 @@ $(document).ready(function() {
         Object.keys(data).forEach(function(key) {
             if (!['informant', 'childhood_illness', 'adult_illness', 'family_illness', 'other_conditions',
                   'family_other_conditions', 'menstrual_symptoms', 'contraceptive_methods',
+                  'contraceptive_pills_details', 'contraceptive_depo_details', 'contraceptive_implant_details',
                   'psychiatric_illness', 'alternative_therapies', 'cigarette_user', 'alcohol_drinker',
                   'drug_user', 'coffee_user', 'hospitalization', 'surgical_history', 'past_pregnancy',
                   'id', 'patient_id', 'created_at', 'updated_at'].includes(key)) {

@@ -64,7 +64,7 @@ Route::post('/patients', [PatientController::class, 'store'])->name('patients.st
 Route::get('/patients/{patient}', [PatientController::class, 'show'])->name('patients.show');
 Route::put('/patients/{patient}', [PatientController::class, 'update'])->name('patients.update');
 Route::get('/patients/{patient}/edit', [PatientController::class, 'edit'])->name('patients.edit');
-Route::post('/patients/{patient}/update-diagnosis', [PatientController::class, 'updateDiagnosis'])->name('patients.update-diagnosis');
+Route::post('/patients/{patient}/update-diabetes-status', [PatientController::class, 'updateDiabetesStatus'])->name('patients.update-diabetes-status');
 Route::post('/patients/{patient}/update-height', [PatientController::class, 'updateHeight'])->name('patients.update-height');
 Route::post('/patients/{patient}/update-weight', [PatientController::class, 'updateWeight'])->name('patients.update-weight');
 Route::post('/patients/{patient}/update-waist', [PatientController::class, 'updateWaist'])->name('patients.update-waist');
@@ -75,6 +75,7 @@ Route::post('/patients/{patient}/update-heart-rate', [PatientController::class, 
 Route::post('/patients/{patient}/update-o2-saturation', [PatientController::class, 'updateO2Saturation'])->name('patients.update-o2-saturation');
 Route::post('/patients/{patient}/update-respiratory-rate', [PatientController::class, 'updateRespiratoryRate'])->name('patients.update-respiratory-rate');
 Route::post('/patients/{patient}/update-blood-pressure', [PatientController::class, 'updateBloodPressure'])->name('patients.update-blood-pressure');
+Route::post('/patients/{patient}/save-notes', [PatientController::class, 'saveNotes'])->name('patients.save-notes');
 
 // Diagnostic routes
 Route::get('/patients/{patient}/diagnostics', [DiagnosticController::class, 'index'])->name('patients.diagnostics');

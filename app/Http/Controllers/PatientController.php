@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Yajra\DataTables\DataTables;
 use App\Models\Patient;
 use Carbon\Carbon;
@@ -114,6 +115,9 @@ class PatientController extends Controller
             'religion' => $validatedData['religion'],
             'reference_number' => $fullReferenceNumber,
         ]);
+
+        // Clear dashboard cache since we added a new patient
+        $this->clearDashboardCache();
 
         // Handle AJAX requests differently
         if ($request->ajax() || $request->wantsJson()) {
@@ -308,6 +312,9 @@ class PatientController extends Controller
             return back()->with('error', 'Failed to update patient. Please try again.');
         }
 
+        // Clear dashboard cache since patient data was updated
+        $this->clearDashboardCache();
+
         return redirect()->route('patients.show', $patient->id)->with('success', 'Patient updated successfully');
     }
 
@@ -349,26 +356,29 @@ class PatientController extends Controller
     }
 
     /**
-     * Update the patient's diagnosis.
+     * Update the patient's diabetes status.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Patient  $patient
      * @return \Illuminate\Http\Response
      */
-    public function updateDiagnosis(Request $request, Patient $patient)
+    public function updateDiabetesStatus(Request $request, Patient $patient)
     {
         $request->validate([
-            'diagnosis' => 'required|string|max:1000'
+            'diabetes_status' => 'required|string|in:Not Diabetic,Prediabetes,DM Type I,DM Type II,Gestational DM,Other Hyperglycemic States,Pending'
         ]);
 
         $patient->update([
-            'diagnosis' => $request->diagnosis
+            'diabetes_status' => $request->diabetes_status
         ]);
+
+        // Clear dashboard cache since diabetes status affects dashboard charts
+        $this->clearDashboardCache();
 
         return response()->json([
             'success' => true,
-            'message' => 'Diagnosis updated successfully',
-            'diagnosis' => $patient->diagnosis
+            'message' => 'Diabetes Status updated successfully',
+            'diabetes_status' => $patient->diabetes_status
         ]);
     }
 
@@ -791,5 +801,50 @@ class PatientController extends Controller
             'message' => 'Diagnostic information saved successfully!',
             'data' => $request->all()
         ]);
+    }
+
+    /**
+     * Save patient notes
+     */
+    public function saveNotes(Request $request, Patient $patient)
+    {
+        $request->validate([
+            'field' => 'required|string|in:physician_notes,allied_health_notes,admin_notes',
+            'content' => 'nullable|string'
+        ]);
+
+        $field = $request->input('field');
+        $content = $request->input('content');
+
+        // Update the specific note field
+        $patient->update([
+            $field => $content
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Notes saved successfully!',
+            'field' => $field,
+            'content' => $content
+        ]);
+    }
+
+    /**
+     * Clear dashboard cache when patient data changes
+     */
+    private function clearDashboardCache()
+    {
+        // Clear all dashboard-related cache keys
+        Cache::forget('dashboard_data');
+        Cache::forget('dashboard_basic_counts');
+        Cache::forget('dashboard_diabetes_data');
+        Cache::forget('dashboard_demographic_data');
+        
+        // Clear monthly data cache for current year
+        $currentYear = now()->year;
+        $currentMonth = now()->month;
+        Cache::forget("dashboard_monthly_data_{$currentYear}_{$currentMonth}");
+        Cache::forget("dashboard_monthly_patients_{$currentYear}");
+        Cache::forget("dashboard_consultation_trends_{$currentYear}");
     }
 }

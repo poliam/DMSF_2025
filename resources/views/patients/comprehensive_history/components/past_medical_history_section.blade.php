@@ -424,6 +424,14 @@
                         <input class="form-check-input" type="checkbox" id="cancer" name="other_conditions[]" value="cancer">
                         <label class="form-check-label" for="cancer">Cancer</label>
                     </div>
+                    <div class="mt-2">
+                        <select class="form-select" name="cancer_status">
+                            <option value="">Select Status</option>
+                            <option value="relapse">Relapse</option>
+                            <option value="ongoing_treatment">Ongoing Treatment</option>
+                            <option value="remission">Remission</option>
+                        </select>
+                    </div>
                     <input type="text" class="form-control mt-2" name="cancer_details" placeholder="Details">
                 </div>
                 <div class="col-md-4 mb-3">

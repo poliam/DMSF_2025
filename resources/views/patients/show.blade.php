@@ -298,12 +298,12 @@
                     </div>
 
                     <p class="pt-3 text-white mb-2 text-center">
-                        Diagnosis
-                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#diagnosisModal">
+                        Diabetes Status
+                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#diabetesStatusModal">
                             <i class="fa-solid fa-plus"></i>
                         </button>
                     </p>
-                    <p class="text-center text-white">{{ $patient->diagnosis ?? 'Diagnosis not set'}}</p>
+                    <p class="text-center text-white">{{ $patient->diabetes_status ?? 'Pending'}}</p>
                 </div>
 
                 <!-- Right Section -->
@@ -683,6 +683,10 @@
                             <br/>
                             @include('patients.otherlmandvs.lifestyle_measures', ['patient' => $patient])
                         </div>
+                        <div class="tab-pane fade" id="notes-tab-pane" role="tabpanel" aria-labelledby="notes-tab" tabindex="0">
+                            <br/>
+                            @include('patients.notes.notes', ['patient' => $patient])
+                        </div>
                         <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>
                     </div>
                 </div>
@@ -849,25 +853,33 @@
                 </div>
             </div>
 
-    <!-- Add Diagnosis Modal -->
-    <div class="modal fade" id="diagnosisModal" tabindex="-1" aria-labelledby="diagnosisModalLabel" aria-hidden="true">
+    <!-- Add Diabetes Status Modal -->
+    <div class="modal fade" id="diabetesStatusModal" tabindex="-1" aria-labelledby="diabetesStatusModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="diagnosisModalLabel">Edit Diagnosis</h5>
+                    <h5 class="modal-title" id="diabetesStatusModalLabel">Edit Diabetes Status</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="diagnosisForm">
+                    <form id="diabetesStatusForm">
                         @csrf
                         <input type="hidden" name="patient_id" value="{{ $patient->id }}">
                         <div class="mb-3">
-                            <label for="diagnosis" class="form-label">Diagnosis</label>
-                            <textarea class="form-control" id="diagnosis" name="diagnosis" rows="3" required>{{ $patient->diagnosis }}</textarea>
+                            <label for="diabetes_status" class="form-label">Diabetes Status</label>
+                            <select class="form-control" id="diabetes_status" name="diabetes_status" required>
+                                <option value="Not Diabetic" {{ $patient->diabetes_status == 'Not Diabetic' ? 'selected' : '' }}>Not Diabetic</option>
+                                <option value="Prediabetes" {{ $patient->diabetes_status == 'Prediabetes' ? 'selected' : '' }}>Prediabetes</option>
+                                <option value="DM Type I" {{ $patient->diabetes_status == 'DM Type I' ? 'selected' : '' }}>DM Type I</option>
+                                <option value="DM Type II" {{ $patient->diabetes_status == 'DM Type II' ? 'selected' : '' }}>DM Type II</option>
+                                <option value="Gestational DM" {{ $patient->diabetes_status == 'Gestational DM' ? 'selected' : '' }}>Gestational DM</option>
+                                <option value="Other Hyperglycemic States" {{ $patient->diabetes_status == 'Other Hyperglycemic States' ? 'selected' : '' }}>Other Hyperglycemic States</option>
+                                <option value="Pending" {{ $patient->diabetes_status == 'Pending' ? 'selected' : '' }}>Pending</option>
+                            </select>
                         </div>
                         <div class="d-flex justify-content-between">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save Diagnosis</button>
+                            <button type="submit" class="btn btn-primary">Save Diabetes Status</button>
                         </div>
                     </form>
                 </div>
@@ -1303,19 +1315,19 @@
             });
         });
 
-        // Diagnosis form submission
-        $('#diagnosisForm').on('submit', function(e) {
+        // Diabetes Status form submission
+        $('#diabetesStatusForm').on('submit', function(e) {
             e.preventDefault();
 
             $.ajax({
-                url: "{{ route('patients.update-diagnosis', $patient->id) }}",
+                url: "{{ route('patients.update-diabetes-status', $patient->id) }}",
                 method: "POST",
                 data: $(this).serialize(),
                 success: function(response) {
-                    $('#diagnosisModal').modal('hide');
-                    // Update the diagnosis display
-                    $('.text-center').last().text(response.diagnosis);
-                    alert('Diagnosis updated successfully!');
+                    $('#diabetesStatusModal').modal('hide');
+                    // Update the diabetes status display
+                    $('.text-center').last().text(response.diabetes_status);
+                    alert('Diabetes Status updated successfully!');
                     // Refresh the page
                     location.reload();
                 },

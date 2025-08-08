@@ -59,10 +59,10 @@
     </div>
 
     <!-- Diabetes Cases -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
             <h4 class="text-sm font-medium mb-2">Diabetes Cases</h4>
-            <div class="h-40">
+            <div class="h-48">
                 <canvas id="diabetesChart"></canvas>
             </div>
         </div>

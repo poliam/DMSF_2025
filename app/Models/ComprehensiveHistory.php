@@ -45,6 +45,9 @@ class ComprehensiveHistory extends Model
         'pap_smear',
         'contraceptive_methods',
         'contraceptive_other',
+        'contraceptive_pills_details',
+        'contraceptive_depo_details',
+        'contraceptive_implant_details',
         'psychiatric_illness',
         'psychiatric_others_details',
         'cigarette_user',
@@ -120,6 +123,7 @@ class ComprehensiveHistory extends Model
         'cancer_family_status',
         // Condition details
         'cancer_details',
+        'cancer_status',
         'dyslipidemia_details',
         'neurologic_details',
         'liver_details',

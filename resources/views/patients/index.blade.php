@@ -51,7 +51,7 @@
                     <tr>
                         <th width="15%">First Name</th>
                         <th width="15%">Last Name</th>
-                        <th width="50%">Diagnosis</th>
+                        <th width="50%">Diabetes Status</th>
                         <th width="15%">Created At</th>
                         <th width="5%">Actions</th>
                     </tr>
@@ -65,7 +65,7 @@
                         <tr>
                             <td>{{ $patient->first_name }}</td>
                             <td>{{ $patient->last_name }}</td>
-                            <td>{{ $patient->diagnosis ?? 'Not yet diagnosed' }}</td>
+                            <td>{{ $patient->diabetes_status ?? 'Pending' }}</td>
                             <td data-order="{{ $patient->created_at->timestamp }}">
                                 <small class="text-muted">{{ $philippineTime->format('M d, Y') }}</small><br>
                                 <small>{{ $philippineTime->format('h:i A') }}</small>

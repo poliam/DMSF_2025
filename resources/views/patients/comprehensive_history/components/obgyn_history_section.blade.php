@@ -202,24 +202,95 @@
                 <label class="form-check-label" for="contraceptive_withdrawal">Withdrawal</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="contraceptive_pills" name="contraceptive_methods[]" value="pills">
+                <input class="form-check-input contraceptive-with-details" type="checkbox" id="contraceptive_pills" name="contraceptive_methods[]" value="pills" data-target="pills_details">
                 <label class="form-check-label" for="contraceptive_pills">Hormonal pills</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="contraceptive_depo" name="contraceptive_methods[]" value="depo">
+                <input class="form-check-input contraceptive-with-details" type="checkbox" id="contraceptive_depo" name="contraceptive_methods[]" value="depo" data-target="depo_details">
                 <label class="form-check-label" for="contraceptive_depo">Depo</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" id="contraceptive_implant" name="contraceptive_methods[]" value="implant">
+                <input class="form-check-input contraceptive-with-details" type="checkbox" id="contraceptive_implant" name="contraceptive_methods[]" value="implant" data-target="implant_details">
                 <label class="form-check-label" for="contraceptive_implant">Implant</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" id="contraceptive_other_checkbox" name="contraceptive_methods[]" value="other">
                 <label class="form-check-label" for="contraceptive_other_checkbox">Others</label>
             </div>
+            
+            <!-- Details for specific contraceptive methods -->
+            <div class="mt-2" id="pills_details" style="display: none;">
+                <input type="text" class="form-control" id="contraceptive_pills_details" name="contraceptive_pills_details" placeholder="Hormonal pills details">
+            </div>
+            
+            <div class="mt-2" id="depo_details" style="display: none;">
+                <input type="text" class="form-control" id="contraceptive_depo_details" name="contraceptive_depo_details" placeholder="Depo details">
+            </div>
+            
+            <div class="mt-2" id="implant_details" style="display: none;">
+                <input type="text" class="form-control" id="contraceptive_implant_details" name="contraceptive_implant_details" placeholder="Implant details">
+            </div>
+            
             <div class="mt-2">
                 <input type="text" class="form-control" id="contraceptive_other" name="contraceptive_other" placeholder="Other contraceptive methods">
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Function to initialize contraceptive method toggles
+function initializeContraceptiveToggles() {
+    // Handle contraceptive method checkboxes with details
+    const contraceptiveCheckboxes = document.querySelectorAll('.contraceptive-with-details');
+    
+    // Function to toggle visibility of detail fields
+    function toggleDetailField(checkbox) {
+        const targetId = checkbox.getAttribute('data-target');
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+            if (checkbox.checked) {
+                targetElement.style.display = 'block';
+            } else {
+                targetElement.style.display = 'none';
+                // Don't clear the input when hiding during initialization
+                // Only clear when user unchecks manually
+                if (!checkbox.hasAttribute('data-initializing')) {
+                    const input = targetElement.querySelector('input');
+                    if (input) {
+                        input.value = '';
+                    }
+                }
+            }
+        }
+    }
+    
+    // Initialize the state
+    contraceptiveCheckboxes.forEach(function(checkbox) {
+        // Mark as initializing to prevent clearing values
+        checkbox.setAttribute('data-initializing', 'true');
+        toggleDetailField(checkbox);
+        checkbox.removeAttribute('data-initializing');
+        
+        // Remove existing event listeners to prevent duplicates
+        checkbox.removeEventListener('change', checkbox._toggleHandler);
+        
+        // Create new event handler
+        checkbox._toggleHandler = function() {
+            toggleDetailField(this);
+        };
+        
+        // Add event listener for changes
+        checkbox.addEventListener('change', checkbox._toggleHandler);
+    });
+}
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeContraceptiveToggles();
+});
+
+// Make function globally available
+window.initializeContraceptiveToggles = initializeContraceptiveToggles;
+</script>

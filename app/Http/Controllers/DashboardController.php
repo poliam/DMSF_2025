@@ -94,10 +94,16 @@ class DashboardController extends Controller
                 return $result;
             });
 
-            // Get diabetes patient count with optimized query
+            // Get diabetes status distribution with optimized query
             $diabetesData = Cache::remember('dashboard_diabetes_data', 300, function () {
                 return Patient::selectRaw('
-                    SUM(CASE WHEN diagnosis LIKE "%diabetes%" OR diagnosis LIKE "%diabetic%" THEN 1 ELSE 0 END) as diabetic_count,
+                    SUM(CASE WHEN diabetes_status = "Not Diabetic" THEN 1 ELSE 0 END) as not_diabetic,
+                    SUM(CASE WHEN diabetes_status = "Prediabetes" THEN 1 ELSE 0 END) as prediabetes,
+                    SUM(CASE WHEN diabetes_status = "DM Type I" THEN 1 ELSE 0 END) as dm_type_1,
+                    SUM(CASE WHEN diabetes_status = "DM Type II" THEN 1 ELSE 0 END) as dm_type_2,
+                    SUM(CASE WHEN diabetes_status = "Gestational DM" THEN 1 ELSE 0 END) as gestational_dm,
+                    SUM(CASE WHEN diabetes_status = "Other Hyperglycemic States" THEN 1 ELSE 0 END) as other_hyperglycemic,
+                    SUM(CASE WHEN diabetes_status = "Pending" THEN 1 ELSE 0 END) as pending,
                     COUNT(*) as total_count
                 ')->first();
             });
@@ -191,7 +197,6 @@ class DashboardController extends Controller
 
             // Calculate derived values
             $totalPatients = $basicCounts['totalPatients'];
-            $diabeticPatients = $diabetesData->diabetic_count ?? 0;
             
             return [
                 'totalPatients' => $totalPatients,
@@ -236,9 +241,16 @@ class DashboardController extends Controller
                 'withDiagnostics' => $basicCounts['diagnosticRequests'],
                 'withoutDiagnostics' => $totalPatients - $basicCounts['diagnosticRequests'],
                 
-                // Diabetes data
-                'diabetic' => $diabeticPatients,
-                'non_diabetic' => $totalPatients - $diabeticPatients,
+                // Diabetes status distribution data
+                'diabetesStatus' => [
+                    'Not Diabetic' => $diabetesData->not_diabetic ?? 0,
+                    'Prediabetes' => $diabetesData->prediabetes ?? 0,
+                    'DM Type I' => $diabetesData->dm_type_1 ?? 0,
+                    'DM Type II' => $diabetesData->dm_type_2 ?? 0,
+                    'Gestational DM' => $diabetesData->gestational_dm ?? 0,
+                    'Other Hyperglycemic States' => $diabetesData->other_hyperglycemic ?? 0,
+                    'Pending' => $diabetesData->pending ?? 0,
+                ],
             ];
         } catch (\Exception $e) {
             // Return minimal fallback data
@@ -270,8 +282,15 @@ class DashboardController extends Controller
                 'withoutPrescription' => 0,
                 'withDiagnostics' => 0,
                 'withoutDiagnostics' => 0,
-                'diabetic' => 0,
-                'non_diabetic' => 0,
+                'diabetesStatus' => [
+                    'Not Diabetic' => 0,
+                    'Prediabetes' => 0,
+                    'DM Type I' => 0,
+                    'DM Type II' => 0,
+                    'Gestational DM' => 0,
+                    'Other Hyperglycemic States' => 0,
+                    'Pending' => 0,
+                ],
                 'error' => true,
                 'error_message' => $e->getMessage()
             ];

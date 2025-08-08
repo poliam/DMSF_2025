@@ -307,23 +307,48 @@ const demographicsCharts = {
     },
 
     // Diabetes Cases Chart
+    // Diabetes Status Distribution Chart
     initDiabetesChart: function(data) {
         try {
             const ctx = document.getElementById('diabetesChart');
             if (!ctx) {
                 return;
             }
+            
+            const diabetesStatus = data.diabetesStatus || {};
+            
             new Chart(ctx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
-                    labels: ['Diabetic', 'Non-Diabetic'],
+                    labels: [
+                        'Not Diabetic', 
+                        'Prediabetes', 
+                        'DM Type I', 
+                        'DM Type II', 
+                        'Gestational DM', 
+                        'Other Hyperglycemic', 
+                        'Pending'
+                    ],
                     datasets: [{
                         label: 'Patients',
                         data: [
-                            data.diabetic || 0,
-                            data.non_diabetic || 0
+                            diabetesStatus['Not Diabetic'] || 0,
+                            diabetesStatus['Prediabetes'] || 0,
+                            diabetesStatus['DM Type I'] || 0,
+                            diabetesStatus['DM Type II'] || 0,
+                            diabetesStatus['Gestational DM'] || 0,
+                            diabetesStatus['Other Hyperglycemic States'] || 0,
+                            diabetesStatus['Pending'] || 0
                         ],
-                        backgroundColor: ['#EF4444', '#10B981'],
+                        backgroundColor: [
+                            '#10B981', // Not Diabetic - Green
+                            '#F59E0B', // Prediabetes - Amber
+                            '#EF4444', // DM Type I - Red
+                            '#DC2626', // DM Type II - Dark Red
+                            '#F97316', // Gestational DM - Orange
+                            '#8B5CF6', // Other Hyperglycemic - Purple
+                            '#6B7280'  // Pending - Gray
+                        ],
                         borderWidth: 0
                     }]
                 },
