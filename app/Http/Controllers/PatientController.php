@@ -50,7 +50,7 @@ class PatientController extends Controller
         // Check for duplicate submission token first
         if ($request->has('submission_token')) {
             $cacheKey = 'submission_token_' . $request->submission_token;
-            
+
             // Check if this token was already used (stored in cache for 5 minutes)
             if (cache()->has($cacheKey)) {
                 if ($request->ajax() || $request->wantsJson()) {
@@ -61,7 +61,7 @@ class PatientController extends Controller
                 }
                 return back()->with('error', 'This form has already been submitted. Please do not submit multiple times.');
             }
-            
+
             // Mark this token as used for 5 minutes
             cache()->put($cacheKey, true, now()->addMinutes(5));
         }
@@ -82,8 +82,15 @@ class PatientController extends Controller
                 'marital_status' => ['required', 'string', 'max:50'],
                 'monthly_household_income' => ['required', 'string', 'max:50'],
                 'religion' => ['required', 'string', 'max:50'],
+                'image_path' => ['nullable', 'string'],
                 'submission_token' => ['nullable', 'string'], // Add validation for submission token
             ]);
+
+            // Handle image data if present
+            $imagePath = null;
+            if ($request->filled('image_path') && strpos($request->image_path, 'data:image') === 0) {
+                $imagePath = $this->saveBase64Image($request->image_path, $request->first_name, $request->last_name);
+            }
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
@@ -118,6 +125,7 @@ class PatientController extends Controller
             'marital_status' => $validatedData['marital_status'],
             'monthly_household_income' => $validatedData['monthly_household_income'],
             'religion' => $validatedData['religion'],
+            'image_path' => $imagePath,
             'reference_number' => $fullReferenceNumber,
         ]);
 
@@ -141,7 +149,7 @@ class PatientController extends Controller
      * Format: LDC-PC0001
      * LDC = LD + first letter of barangay (Cogon=C, Mrilog=M, etc.)
      * P = first letter of first name
-     * C = first letter of last name  
+     * C = first letter of last name
      * 0001 = incrementing number per barangay
      *
      * @param string $firstName
@@ -172,7 +180,7 @@ class PatientController extends Controller
             // Generate name initials
             $firstNameInitial = strtoupper(substr($firstName, 0, 1));
             $lastNameInitial = strtoupper(substr($lastName, 0, 1));
-            
+
             // Get the latest reference number for this specific barangay
             $latestPatient = Patient::lockForUpdate()
                 ->where('brgy_address', $barangay)
@@ -192,7 +200,7 @@ class PatientController extends Controller
             // Increment and format the reference number
             $nextNumber = $numericPart + 1;
             $formattedNumber = str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-            
+
             // Combine all parts: LDC-PC0001
             return $locationCode . '-' . $firstNameInitial . $lastNameInitial . $formattedNumber;
         });
@@ -216,7 +224,7 @@ class PatientController extends Controller
 
         // Get or create consultations for this patient
         $consultations = \App\Models\Consultation::ensureThreeConsultations($patient->id);
-        
+
         // If consultations array is returned, convert to collection
         if (is_array($consultations)) {
             $consultations = collect($consultations);
@@ -251,27 +259,27 @@ class PatientController extends Controller
         $age = Carbon::parse($patient->birth_date)->age;
         $reviewOfSystems = $patient->reviewOfSystems->first();
         $physicalExam = $patient->physicalExamination;
-        
+
         return view('patients.show', [
             'patient' => $patient,
             'age' => $age,
             'reviewOfSystems' => $reviewOfSystems,
-            
+
             // Consultation data
             'consultation1' => $consultation1,
             'consultation2' => $consultation2,
             'consultation3' => $consultation3,
-            
+
             // Measurement data (keep variable names for compatibility)
             'tab1Measurements' => $consultation1Measurement,
             'tab2Measurements' => $consultation2Measurement,
             'tab3Measurements' => $consultation3Measurement,
-            
+
             // Date data (keep variable names for compatibility)
             'tab1Date' => $consultation1Date,
             'tab2Date' => $consultation2Date,
             'tab3Date' => $consultation3Date,
-            
+
             'measurementDate' => now()->toDateString(),
             'physicalExam' => $physicalExam,
             'generalSurveyData' => $physicalExam?->general_survey ?? [],
@@ -337,7 +345,39 @@ class PatientController extends Controller
             'marital_status' => 'required|string|max:50',
             'monthly_household_income' => 'required|string|max:50',
             'religion' => 'required|string|max:50',
+            'image_path' => 'nullable|string',
         ]);
+
+        // Handle image processing
+        $imagePath = $patient->image_path; // Keep existing image by default
+
+        if ($request->filled('image_path')) {
+            $newImageData = $request->input('image_path');
+
+            // Check if it's a new base64 image (not an existing file path)
+            if (strpos($newImageData, 'data:image') === 0) {
+                // Save the new image
+                $newImagePath = $this->saveBase64Image($newImageData, $patient->first_name, $patient->last_name);
+
+                if ($newImagePath) {
+                    // Delete the old image file if it exists
+                    if ($patient->image_path && file_exists(public_path($patient->image_path))) {
+                        unlink(public_path($patient->image_path));
+                    }
+
+                    $imagePath = $newImagePath;
+                }
+            }
+        } else {
+            // If image_path is empty, remove the existing image
+            if ($patient->image_path && file_exists(public_path($patient->image_path))) {
+                unlink(public_path($patient->image_path));
+            }
+            $imagePath = null;
+        }
+
+        // Add image_path to validated data
+        $validated['image_path'] = $imagePath;
 
         // Manually update the record using Query Builder
         $updated = Patient::where('id', $patient->id)->update($validated);
@@ -874,12 +914,52 @@ class PatientController extends Controller
         Cache::forget('dashboard_basic_counts');
         Cache::forget('dashboard_diabetes_data');
         Cache::forget('dashboard_demographic_data');
-        
+
         // Clear monthly data cache for current year
         $currentYear = now()->year;
         $currentMonth = now()->month;
         Cache::forget("dashboard_monthly_data_{$currentYear}_{$currentMonth}");
         Cache::forget("dashboard_monthly_patients_{$currentYear}");
         Cache::forget("dashboard_consultation_trends_{$currentYear}");
+    }
+
+    /**
+     * Save base64 image data to file
+     */
+    private function saveBase64Image($base64Data, $firstName, $lastName)
+    {
+        try {
+            // Extract the base64 data
+            $data = explode(',', $base64Data);
+            if (count($data) !== 2) {
+                return null;
+            }
+
+            $imageData = base64_decode($data[1]);
+            if ($imageData === false) {
+                return null;
+            }
+
+            // Generate unique filename
+            $filename = 'patient_' . strtolower($firstName) . '_' . strtolower($lastName) . '_' . time() . '.jpg';
+
+            // Create directory if it doesn't exist
+            $directory = storage_path('app/public/patient-photos');
+            if (!file_exists($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
+            // Save the image
+            $filePath = $directory . '/' . $filename;
+            if (file_put_contents($filePath, $imageData)) {
+                // Return the public URL path
+                return 'storage/patient-photos/' . $filename;
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            \Log::error('Error saving patient image: ' . $e->getMessage());
+            return null;
+        }
     }
 }

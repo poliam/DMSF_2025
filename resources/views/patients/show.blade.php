@@ -278,32 +278,35 @@
                         </button>
                     </a>
                     <a href="{{ route('patients.edit', $patient->id) }}" class="bg-[#7CAD3E] hover:bg-[#1A5D77] text-white border-none px-3 py-2 rounded-full text-base mt-3 cursor-pointer transition-colors duration-300">Edit Patient</a>
-                    <h5 class="fw-bold mb-1 mt-5 text-center text-white">
-                        {{ $patient->last_name }}, {{ $patient->first_name }} {{ $patient->middle_name }}
-                    </h5>
-                    <div class="p-1 text-center text-white">
-                        <p class="mb-0">Age: {{ \Carbon\Carbon::parse($patient->birth_date)->age }} years old</p>
-                    </div>
-                    <div class="p-1 text-center text-white">
-                        <p class="mb-0">Sex: {{ $patient->gender }}</p>
-                    </div>
-                    <div class="p-1 text-center text-white">
-                        <p class="mb-0">Status: {{ $patient->marital_status }}</p>
-                    </div>
-                    <div class="p-1 text-center text-white">
-                        <p class="mb-0">Religion: {{ $patient->religion }}</p>
-                    </div>
-                    <div class="bg-light p-1 rounded border text-center">
-                        <p class="mb-0">{{ $patient->reference_number ?? 'Not set' }}</p>
-                    </div>
 
-                    <p class="pt-3 text-white mb-2 text-center">
-                        Diabetes Status
-                        <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#diabetesStatusModal">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </p>
-                    <p class="text-center text-white">{{ $patient->diabetes_status ?? 'Pending'}}</p>
+                    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center" style="padding-top: 8rem;">
+                        <h4 class="fw-bold mb-1 mt-5 text-center text-white">
+                            {{ $patient->last_name }}, {{ $patient->first_name }} {{ $patient->middle_name }}
+                        </h4>
+                        <div class="p-1 text-center text-white">
+                            <p class="mb-0 fs-5">Age: {{ \Carbon\Carbon::parse($patient->birth_date)->age }} years old</p>
+                        </div>
+                        <div class="p-1 text-center text-white">
+                            <p class="mb-0 fs-5">Sex: {{ $patient->gender }}</p>
+                        </div>
+                        <div class="p-1 text-center text-white">
+                            <p class="mb-0 fs-5">Status: {{ $patient->marital_status }}</p>
+                        </div>
+                        <div class="p-1 text-center text-white">
+                            <p class="mb-0 fs-5">Religion: {{ $patient->religion }}</p>
+                        </div>
+                        <div class="bg-light p-1 rounded border text-center">
+                            <p class="mb-0 fs-5">{{ $patient->reference_number ?? 'Not set' }}</p>
+                        </div>
+
+                        <p class="pt-3 text-white mb-2 text-center fs-5">
+                            Diagnosis
+                            <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#diagnosisModal">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </p>
+                        <p class="text-center text-white fs-5">{{ $patient->diagnosis ?? 'Diagnosis not set'}}</p>
+                    </div>
                 </div>
 
                 <!-- Right Section -->
@@ -636,7 +639,7 @@
                             <button class="nav-link-bot" id="notes-tab" data-bs-toggle="tab" data-bs-target="#notes-tab-pane" type="button" role="tab" aria-controls="notes-tab-pane" aria-selected="false">Notes</button>
                         </li>
                         <li class="nav-item" role="presentation">
-                            
+
                         </li>
                     </ul>
 
@@ -655,7 +658,7 @@
                             <br/>
                             @include('patients.screeningtool.screeningtool', ['patient' => $patient])
                         </div>
-                        
+
                         <div class="tab-pane fade" id="review-of-systems-tab-pane" role="tabpanel" aria-labelledby="review-of-systems-tab" tabindex="0">
                             <br/>
                             @include('patients.review_of_systems.review_of_systems', ['patient' => $patient])

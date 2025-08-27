@@ -30,6 +30,7 @@ class Patient extends Model
         'status',
         'monthly_household_income',
         'religion',
+        'image_path',
         'diabetes_status',
         'height', // Keep height in patients table for basic data
         'reference_number',
@@ -122,7 +123,7 @@ class Patient extends Model
     public function calculateBMR()
     {
         $latestMeasurement = $this->getLatestMeasurement();
-        
+
         // Ensure weight, height, and age are available
         if (!$latestMeasurement || !$latestMeasurement->weight_kg || !$latestMeasurement->height || !$this->age || !$this->gender) {
             return "N/A";
@@ -282,11 +283,11 @@ class Patient extends Model
         $consultation = $this->consultations()
             ->where('consultation_number', $tabNumber)
             ->first();
-            
+
         if ($consultation) {
             return $consultation->patientMeasurement;
         }
-        
+
         // Fallback to old method if needed
         return $this->patientMeasurements()
             ->where('tab_number', $tabNumber)

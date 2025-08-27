@@ -40,6 +40,7 @@ class PatientFactory extends Factory
             'religion' => $this->faker->randomElement([
                 'Catholic', 'Protestant', 'Islam', 'Other'
             ]),
+            'image_path' => $this->faker->optional()->imageUrl(200, 200, 'people'),
             'diagnosis' => $this->faker->optional()->sentence,
             'height' => $this->faker->numberBetween(150, 200), // cm
             'reference_number' => $this->faker->unique()->regexify('[A-Z]{2}[0-9]{6}'),

@@ -8,6 +8,9 @@
                 @csrf
                 @method('PUT')
 
+                <!-- Hidden input for image path -->
+                <input type="hidden" name="image_path" id="image_path" value="{{ old('image_path', $patient->image_path) }}">
+
                 <legend>Patient Identifying Record</legend>
                 <hr>
 
@@ -65,6 +68,22 @@
                             @error('middle_name')
                                 <span class="text-danger text-sm">{{ $message }}</span>
                             @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Preview Section -->
+                <div class="row mb-4">
+                    <div class="col-md-12 text-center">
+                        <div id="image-preview-section" class="{{ $patient->image_path ? '' : 'd-none' }}">
+                            <label class="form-label">Current Patient Photo</label>
+                            <div class="d-flex justify-content-center align-items-center gap-3">
+                                <img id="form-image-preview" src="{{ asset($patient->image_path) }}" alt="Patient Photo" 
+                                     style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #7CAD3E;">
+                                <button type="button" id="remove-image-btn" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-trash"></i> Remove Image
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -236,9 +255,48 @@
                 <!-- Submit Button -->
                 <div class="form-group text-center">
                     <button href="{{ route('patients.show', $patient->id) }}" class="bg-blue-500 hover:bg-red-500 text-white border-none px-3 py-2 rounded-full text-base mt-3 cursor-pointer transition-colors duration-300">Cancel</button>
+                    <button type="button" id="capture-image-btn" class="bg-[#1A5D77] hover:bg-[#7CAD3E] text-white border-none px-3 py-2 rounded-full text-base mt-3 cursor-pointer transition-colors duration-300 me-2">
+                        <i class="fas fa-camera"></i> {{ $patient->image_path ? 'Change Photo' : 'Capture Photo' }}
+                    </button>
                     <button type="submit" class="bg-[#7CAD3E] hover:bg-[#1A5D77] text-white border-none px-3 py-2 rounded-full text-base mt-3 cursor-pointer transition-colors duration-300">Update Patient</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<!-- Camera Modal -->
+<div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cameraModalLabel">Capture Patient Photo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-3">
+                    <div id="camera-container" class="mb-3">
+                        <video id="camera-preview" autoplay playsinline style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;"></video>
+                        <div id="camera-controls" class="mt-3">
+                            <button type="button" id="start-camera-btn" class="btn btn-primary">
+                                <i class="fas fa-camera"></i> Start Camera
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="captured-image-container" class="mb-3" style="display: none;">
+                        <img id="captured-image" style="width: 100%; max-width: 500px; height: auto; border-radius: 8px;">
+                        <div class="mt-3">
+                            <button type="button" id="retake-btn" class="btn btn-secondary me-2">
+                                <i class="fas fa-redo"></i> Retake
+                            </button>
+                            <button type="button" id="save-image-btn" class="btn btn-success">
+                                <i class="fas fa-save"></i> Save Photo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -256,8 +314,72 @@
             background-color: #1A5D77; /* Darker blue on hover */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        /* Camera Modal Styles */
+        .modal-content {
+            border-radius: 15px;
+        }
+        
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        #camera-preview, #captured-image {
+            border: 2px solid #dee2e6;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        
+        .btn {
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 500;
+        }
+        
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        /* Image Preview Styles */
+        .patient-photo {
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .patient-photo:hover {
+            transform: scale(1.1);
+        }
+        
+        .no-photo-placeholder {
+            background-color: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            color: #6c757d;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .no-photo-placeholder:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
     </style>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Auto-calculate age from birthdate
         document.getElementById('birth_date').addEventListener('change', function() {
@@ -270,9 +392,194 @@
             }
             document.getElementById('age').value = isNaN(age) ? '' : age;
         });
+        
         // Show/hide other barangay field
         document.getElementById('brgy_address').addEventListener('change', function() {
             document.getElementById('brgy_address_other').style.display = this.value === 'other' ? 'block' : 'none';
+        });
+
+        // Camera functionality
+        let stream = null;
+        let capturedImageData = null;
+
+        // Capture image button click
+        document.getElementById('capture-image-btn').addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.getElementById('cameraModal'));
+            modal.show();
+        });
+
+        // Start camera button click
+        document.getElementById('start-camera-btn').addEventListener('click', async function() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 },
+                        facingMode: 'user'
+                    } 
+                });
+                
+                const video = document.getElementById('camera-preview');
+                video.srcObject = stream;
+                
+                // Show camera controls
+                document.getElementById('camera-controls').innerHTML = `
+                    <button type="button" id="capture-btn" class="btn btn-warning">
+                        <i class="fas fa-camera"></i> Capture Photo
+                    </button>
+                `;
+                
+                // Add capture button event listener
+                document.getElementById('capture-btn').addEventListener('click', capturePhoto);
+                
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                let errorMessage = 'Unable to access camera.';
+                
+                if (error.name === 'NotAllowedError') {
+                    errorMessage = 'Camera access denied. Please allow camera access and try again.';
+                } else if (error.name === 'NotFoundError') {
+                    errorMessage = 'No camera found on this device.';
+                } else if (error.name === 'NotSupportedError') {
+                    errorMessage = 'Camera not supported on this device.';
+                }
+                
+                alert(errorMessage);
+            }
+        });
+
+        // Capture photo
+        function capturePhoto() {
+            const video = document.getElementById('camera-preview');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            capturedImageData = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // Stop camera stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            // Show captured image
+            document.getElementById('captured-image').src = capturedImageData;
+            document.getElementById('camera-container').style.display = 'none';
+            document.getElementById('captured-image-container').style.display = 'block';
+        }
+
+        // Retake button click
+        document.getElementById('retake-btn').addEventListener('click', function() {
+            document.getElementById('captured-image-container').style.display = 'none';
+            document.getElementById('camera-container').style.display = 'block';
+            document.getElementById('camera-controls').innerHTML = `
+                <button type="button" id="start-camera-btn" class="btn btn-primary">
+                    <i class="fas fa-camera"></i> Start Camera
+                </button>
+            `;
+            
+            // Re-add start camera event listener
+            document.getElementById('start-camera-btn').addEventListener('click', async function() {
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 },
+                            facingMode: 'user'
+                        } 
+                    });
+                    
+                    const video = document.getElementById('camera-preview');
+                    video.srcObject = stream;
+                    
+                    // Show camera controls
+                    document.getElementById('camera-controls').innerHTML = `
+                        <button type="button" id="capture-btn" class="btn btn-warning">
+                            <i class="fas fa-camera"></i> Capture Photo
+                        </button>
+                    `;
+                    
+                    // Add capture button event listener
+                    document.getElementById('capture-btn').addEventListener('click', capturePhoto);
+                    
+                } catch (error) {
+                    console.error('Error accessing camera:', error);
+                    let errorMessage = 'Unable to access camera.';
+                    
+                    if (error.name === 'NotAllowedError') {
+                        errorMessage = 'Camera access denied. Please allow camera access and try again.';
+                    } else if (error.name === 'NotFoundError') {
+                        errorMessage = 'No camera found on this device.';
+                    } else if (error.name === 'NotSupportedError') {
+                        errorMessage = 'Camera not supported on this device.';
+                    }
+                    
+                    alert(errorMessage);
+                }
+            });
+            
+            capturedImageData = null;
+        });
+
+        // Save image button click
+        document.getElementById('save-image-btn').addEventListener('click', function() {
+            if (capturedImageData) {
+                document.getElementById('image_path').value = capturedImageData;
+                
+                // Update form preview
+                const previewImg = document.getElementById('form-image-preview');
+                previewImg.src = capturedImageData;
+                
+                // Show image preview section
+                document.getElementById('image-preview-section').classList.remove('d-none');
+                
+                // Update capture button text and style
+                const captureBtn = document.getElementById('capture-image-btn');
+                captureBtn.innerHTML = '<i class="fas fa-camera"></i> Change Photo';
+                captureBtn.classList.remove('bg-[#1A5D77]', 'hover:bg-[#7CAD3E]');
+                captureBtn.classList.add('bg-[#7CAD3E]', 'hover:bg-[#1A5D77]');
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('cameraModal'));
+                modal.hide();
+            }
+        });
+
+        // Remove image button click
+        document.getElementById('remove-image-btn').addEventListener('click', function() {
+            document.getElementById('image_path').value = '';
+            document.getElementById('form-image-preview').src = '';
+            document.getElementById('image-preview-section').classList.add('d-none');
+            
+            // Reset capture button
+            const captureBtn = document.getElementById('capture-image-btn');
+            captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capture Photo';
+            captureBtn.classList.remove('bg-[#7CAD3E]', 'hover:bg-[#1A5D77]');
+            captureBtn.classList.add('bg-[#1A5D77]', 'hover:bg-[#7CAD3E]');
+        });
+
+        // Modal hidden event - cleanup
+        document.getElementById('cameraModal').addEventListener('hidden.bs.modal', function() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            // Reset modal state
+            document.getElementById('captured-image-container').style.display = 'none';
+            document.getElementById('camera-container').style.display = 'block';
+            document.getElementById('camera-controls').innerHTML = `
+                <button type="button" id="start-camera-btn" class="btn btn-primary">
+                    <i class="fas fa-camera"></i> Start Camera
+                </button>
+            `;
+            
+            capturedImageData = null;
         });
     </script>
 </x-app-layout>

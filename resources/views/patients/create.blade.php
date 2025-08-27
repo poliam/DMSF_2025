@@ -231,17 +231,77 @@
                         </div>
                     </div>
                 </div>
+                <!-- Image Preview Section -->
+                <div class="row mb-4" id="image-preview-section" style="display: none;">
+                    <div class="col-12">
+                        <div class="text-center">
+                            <h6>Patient Photo</h6>
+                            <div class="position-relative d-inline-block">
+                                <img id="form-image-preview" class="img-fluid rounded" style="max-width: 200px; height: auto; border: 3px solid #7CAD3E;">
+                                <button type="button" id="remove-image-btn" class="btn btn-danger btn-sm position-absolute" style="top: -10px; right: -10px; border-radius: 50%; width: 30px; height: 30px; padding: 0;">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group text-center">
                     <button type="submit" id="submit-btn" class="btn btn-success btn-no-double-click mt-4 me-2">
                         <span id="submit-text">Create Patient</span>
                         <span id="submit-spinner" class="spinner-border spinner-border-sm ms-2" style="display: none;" role="status" aria-hidden="true"></span>
                     </button>
+                    <button type="button" id="capture-image-btn" class="btn btn-info btn-no-double-click mt-4 me-2">
+                        <i class="fas fa-camera me-2"></i>Capture Photo
+                    </button>
                     <a href="{{ route('patients.index') }}" class="btn btn-secondary mt-4">Cancel</a>
                 </div>
+                
+                <!-- Hidden input for image data -->
+                <input type="hidden" name="image_path" id="image_path" value="">
             </form>
         </div>
     </div>
+    
+    <!-- Camera Modal -->
+    <div class="modal fade" id="cameraModal" tabindex="-1" aria-labelledby="cameraModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cameraModalLabel">Capture Patient Photo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <div id="camera-container" class="mb-3">
+                            <video id="camera" autoplay playsinline class="img-fluid rounded" style="max-width: 100%; height: auto;"></video>
+                        </div>
+                        <div id="captured-image-container" class="mb-3" style="display: none;">
+                            <img id="captured-image" class="img-fluid rounded" style="max-width: 100%; height: auto;">
+                        </div>
+                        <div class="btn-group" role="group">
+                            <button type="button" id="start-camera-btn" class="btn btn-primary">
+                                <i class="fas fa-play me-2"></i>Start Camera
+                            </button>
+                            <button type="button" id="capture-btn" class="btn btn-success" style="display: none;">
+                                <i class="fas fa-camera me-2"></i>Take Photo
+                            </button>
+                            <button type="button" id="retake-btn" class="btn btn-warning" style="display: none;">
+                                <i class="fas fa-redo me-2"></i>Retake
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="save-image-btn" class="btn btn-success" style="display: none;">Save Photo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // Show/hide other barangay field
@@ -432,6 +492,167 @@
                 card.classList.remove('has-errors');
             }
         }
+
+        // Camera functionality
+        let stream = null;
+        let canvas = null;
+        let capturedImageData = null;
+
+        // Open camera modal
+        document.getElementById('capture-image-btn').addEventListener('click', function() {
+            const modal = new bootstrap.Modal(document.getElementById('cameraModal'));
+            modal.show();
+        });
+
+        // Start camera
+        document.getElementById('start-camera-btn').addEventListener('click', async function() {
+            try {
+                // Check if getUserMedia is supported
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error('Camera access is not supported in this browser');
+                }
+
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 640 },
+                        height: { ideal: 480 },
+                        facingMode: 'user' // Use front camera if available
+                    } 
+                });
+                
+                const video = document.getElementById('camera');
+                video.srcObject = stream;
+                
+                // Show capture button and hide start button
+                document.getElementById('start-camera-btn').style.display = 'none';
+                document.getElementById('capture-btn').style.display = 'inline-block';
+                
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                let errorMessage = 'Unable to access camera. ';
+                
+                if (error.name === 'NotAllowedError') {
+                    errorMessage += 'Please make sure you have granted camera permissions.';
+                } else if (error.name === 'NotFoundError') {
+                    errorMessage += 'No camera found on this device.';
+                } else if (error.name === 'NotSupportedError') {
+                    errorMessage += 'Camera access is not supported in this browser.';
+                } else {
+                    errorMessage += 'Please try refreshing the page or using a different browser.';
+                }
+                
+                alert(errorMessage);
+            }
+        });
+
+        // Capture photo
+        document.getElementById('capture-btn').addEventListener('click', function() {
+            const video = document.getElementById('camera');
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            
+            // Set canvas dimensions to match video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // Draw video frame to canvas
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Convert to base64 data URL
+            capturedImageData = canvas.toDataURL('image/jpeg', 0.8);
+            
+            // Show captured image
+            document.getElementById('captured-image').src = capturedImageData;
+            document.getElementById('camera-container').style.display = 'none';
+            document.getElementById('captured-image-container').style.display = 'block';
+            
+            // Show retake and save buttons
+            document.getElementById('capture-btn').style.display = 'none';
+            document.getElementById('retake-btn').style.display = 'inline-block';
+            document.getElementById('save-image-btn').style.display = 'inline-block';
+            
+            // Stop camera stream
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+
+        // Retake photo
+        document.getElementById('retake-btn').addEventListener('click', function() {
+            // Reset to camera view
+            document.getElementById('camera-container').style.display = 'block';
+            document.getElementById('captured-image-container').style.display = 'none';
+            document.getElementById('start-camera-btn').style.display = 'inline-block';
+            document.getElementById('capture-btn').style.display = 'none';
+            document.getElementById('retake-btn').style.display = 'none';
+            document.getElementById('save-image-btn').style.display = 'none';
+            
+            // Clear captured image
+            capturedImageData = null;
+            document.getElementById('image_path').value = '';
+            
+            // Hide form preview if it was showing
+            document.getElementById('image-preview-section').style.display = 'none';
+        });
+
+        // Save photo
+        document.getElementById('save-image-btn').addEventListener('click', function() {
+            if (capturedImageData) {
+                // Store the image data in the hidden input
+                document.getElementById('image_path').value = capturedImageData;
+                
+                // Show image preview in form
+                document.getElementById('form-image-preview').src = capturedImageData;
+                document.getElementById('image-preview-section').style.display = 'block';
+                
+                // Show success message
+                alert('Photo captured successfully! You can now submit the form.');
+                
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('cameraModal'));
+                modal.hide();
+                
+                // Update capture button to show photo was taken
+                document.getElementById('capture-image-btn').innerHTML = '<i class="fas fa-check me-2"></i>Photo Captured';
+                document.getElementById('capture-image-btn').classList.remove('btn-info');
+                document.getElementById('capture-image-btn').classList.add('btn-success');
+            }
+        });
+
+        // Remove image
+        document.getElementById('remove-image-btn').addEventListener('click', function() {
+            // Clear the image data
+            document.getElementById('image_path').value = '';
+            document.getElementById('form-image-preview').src = '';
+            document.getElementById('image-preview-section').style.display = 'none';
+            
+            // Reset capture button
+            document.getElementById('capture-image-btn').innerHTML = '<i class="fas fa-camera me-2"></i>Capture Photo';
+            document.getElementById('capture-image-btn').classList.remove('btn-success');
+            document.getElementById('capture-image-btn').classList.add('btn-info');
+            
+            // Clear captured image data
+            capturedImageData = null;
+        });
+
+        // Clean up camera when modal is closed
+        document.getElementById('cameraModal').addEventListener('hidden.bs.modal', function() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            // Reset modal state
+            document.getElementById('camera-container').style.display = 'block';
+            document.getElementById('captured-image-container').style.display = 'none';
+            document.getElementById('start-camera-btn').style.display = 'inline-block';
+            document.getElementById('capture-btn').style.display = 'none';
+            document.getElementById('retake-btn').style.display = 'none';
+            document.getElementById('save-image-btn').style.display = 'none';
+            
+            // If no image was saved, hide the form preview
+            if (!document.getElementById('image_path').value) {
+                document.getElementById('image-preview-section').style.display = 'none';
+            }
+        });
 
         // Add event listeners for real-time validation
         document.addEventListener('DOMContentLoaded', function() {
@@ -1026,6 +1247,77 @@
             opacity: 0.5 !important;
             cursor: not-allowed !important;
             transform: none !important;
+        }
+        
+        /* Camera modal styling */
+        #cameraModal .modal-lg {
+            max-width: 800px;
+        }
+        
+        #camera, #captured-image {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        #camera-container, #captured-image-container {
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-group .btn {
+            margin: 0 2px;
+        }
+        
+        /* Photo captured button state */
+        #capture-image-btn.btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+        
+        #capture-image-btn.btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        
+        /* Image preview styling */
+        #image-preview-section {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border: 2px solid #7CAD3E;
+        }
+        
+        #form-image-preview {
+            transition: transform 0.2s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        #form-image-preview:hover {
+            transform: scale(1.05);
+        }
+        
+        #remove-image-btn {
+            transition: all 0.2s ease-in-out;
+            opacity: 0.8;
+        }
+        
+        #remove-image-btn:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        /* Camera modal improvements */
+        #cameraModal .modal-body {
+            padding: 30px;
+        }
+        
+        #camera-container, #captured-image-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
         }
     </style>
 </x-app-layout>
