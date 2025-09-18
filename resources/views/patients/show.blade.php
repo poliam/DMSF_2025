@@ -279,8 +279,24 @@
                     </a>
                     <a href="{{ route('patients.edit', $patient->id) }}" class="bg-[#7CAD3E] hover:bg-[#1A5D77] text-white border-none px-3 py-2 rounded-full text-base mt-3 cursor-pointer transition-colors duration-300">Edit Patient</a>
                     
-                    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center" style="padding-top: 8rem;">
-                        <h4 class="fw-bold mb-1 mt-5 text-center text-white">
+                    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center" style="padding-top: 2rem;">
+                        <!-- Patient Photo -->
+                        <div class="mb-4">
+                            @if($patient->image_path)
+                                <img src="{{ $patient->image_path }}" alt="Patient Photo" 
+                                     class="rounded-circle border border-white" 
+                                     style="width: 120px; height: 120px; object-fit: cover; border-width: 3px !important;"
+                                     onclick="viewPatientImage('{{ $patient->image_path }}', '{{ $patient->first_name }} {{ $patient->last_name }}')"
+                                     title="Click to view larger image">
+                            @else
+                                <div class="rounded-circle border border-white d-flex align-items-center justify-content-center bg-light" 
+                                     style="width: 120px; height: 120px; border-width: 3px !important;">
+                                    <i class="fas fa-user text-muted" style="font-size: 48px;"></i>
+                                </div>
+                            @endif
+                        </div>
+                        
+                        <h4 class="fw-bold mb-1 mt-3 text-center text-white">
                             {{ $patient->last_name }}, {{ $patient->first_name }} {{ $patient->middle_name }}
                         </h4>
                         <div class="p-1 text-center text-white">
@@ -1250,6 +1266,28 @@
             });
         }
     });
+
+    // Function to view patient image in modal
+    function viewPatientImage(imagePath, patientName) {
+        $('#modalPatientImage').attr('src', imagePath);
+        $('#imageViewModalLabel').text(patientName + ' - Photo');
+        $('#imageViewModal').modal('show');
+    }
     </script>
+
+    <!-- Image View Modal -->
+    <div class="modal fade" id="imageViewModal" tabindex="-1" aria-labelledby="imageViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageViewModalLabel">Patient Photo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center d-flex justify-content-center align-items-center" style="min-height: 400px;">
+                    <img id="modalPatientImage" src="" alt="Patient Photo" class="img-fluid rounded" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                </div>
+            </div>
+        </div>
+    </div>
 
 </x-app-layout>

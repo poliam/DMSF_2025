@@ -61,6 +61,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/test', function () {
+    return view('test');
+});
+
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 Route::get('/dashboard-data', [DashboardController::class, 'getData'])->middleware(['auth', 'verified'])->name('dashboard.data');
 
