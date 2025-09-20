@@ -13,7 +13,7 @@ class ResearchEligibilityCriteria extends Model
     protected $fillable = [
         'patient_id', 'read_and_write_consent', 'consent_for_info', 
         'consent_for_teleconsultation', 'laboratory_finding', 
-        'hba1c_result', 'rbs_result', 'polyuria', 'polydipsia', 'polyphagia'
+        'fbs_result', 'rbs_result', 'polyuria', 'polydipsia', 'polyphagia'
     ];
 
     // Assuming you have a Patient model to link to

@@ -1042,6 +1042,8 @@
 	                form[0].reset();
 	                // Reload the table data after successful submission
 	                loadPhysicalActivityData();
+					updateConsultationStatus();
+                    loadConsultationData(consultationId);
 	            },
 	            error: function (xhr) {
 	                let errors = xhr.responseJSON?.errors;

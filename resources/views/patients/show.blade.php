@@ -2,9 +2,8 @@
     <style type="text/css">
         .cardTop {
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            background-color: #496C83;
+            background-color: rgba(242, 242, 242, 0.3);
         }
         .bg-marilog {
             background-image: url('{{ asset("images/marilog-bg.jpg") }}');
@@ -68,9 +67,8 @@
         }
 
         #measurementsTab .nav-link.active {
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            background: #173042;
             color: white;
-            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
             transform: translateY(-1px);
         }
 
@@ -92,12 +90,12 @@
         }
 
         .badge.bg-success {
-            background: linear-gradient(135deg, #27ae60, #2ecc71) !important;
+            background: linear-gradient(96.59deg, #7CAD3E -6.14%, #4A6C2F 91.45%) !important;
             box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
         }
 
         .badge.bg-warning {
-            background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+            background: linear-gradient(96.59deg, #FFD500 -6.14%, #FF9500 91.45%) !important;
             box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
         }
 
@@ -121,10 +119,7 @@
 
         /* Consultation header improvements */
         .consultation-header {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 0.75rem;
-            border-left: 4px solid #3498db;
+            font-size: 1.5rem;
         }
 
         /* Enhanced measurement editing styles */
@@ -264,193 +259,300 @@
                 margin-top: .5rem;
                 margin-bottom: .5rem;
             }
+
+            .patient-photo {
+                transition: transform 0.2s ease-in-out;
+                cursor: pointer;
+            }
+
+            .patient-photo:hover {
+                transform: scale(1.1);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .no-photo-placeholder {
+                transition: all 0.2s ease-in-out;
+            }
+
+            .no-photo-placeholder:hover {
+                background-color: #e9ecef;
+                border-color: #7CAD3E;
+            }
+
+            /* Image Modal Styles */
+            .image-modal .modal-content {
+                border-radius: 15px;
+                border: none;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+
+            .image-modal .modal-header {
+                background-color: #7CAD3E;
+                color: white;
+                border-bottom: none;
+                border-radius: 15px 15px 0 0;
+            }
+
+            .image-modal .modal-body {
+                padding: 0;
+                text-align: center;
+            }
+
+            .image-modal .modal-body img {
+                max-width: 100%;
+                height: auto;
+                border-radius: 0 0 15px 15px;
+            }
+
+            .image-modal .btn-close {
+                filter: invert(1) brightness(100);
+            }
+
+            .editable-measurement {
+                background: white;
+                padding: 12px 15px;
+                border: 2px solid #e9ecef;
+                border-radius: 8px;
+                min-height: 20px;
+                color: #6c757d;
+            }
     </style>
 
     <div class="bg-marilog">
-        <div class="mx-auto p-4">
-            <div class="cardTop shadow-lg p-4 border-0" style="width: 100%; border-radius: 2rem;">
-                <div class="row g-4">
-                <!-- Left Section (Profile Image & Basic Info) -->
-                <div class="col-md-3 text-left border-end">
-                    <a href="{{ route('patients.index') }}">
-                        <button type="button" class="mb-3 border border-white text-white hover:bg-[#1A5D77] hover:text-white transition-colors duration-300 rounded-full px-3 py-1">
-                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                        </button>
-                    </a>
-                    @if(auth()->user()->role === 'bhw_s3' || auth()->user()->role === 'bhw_s6' || auth()->user()->role === 'doctor' || auth()->user()->role === 'admin')
-                        <a href="{{ route('patients.edit', $patient->id) }}" class="bg-[#7CAD3E] hover:bg-[#1A5D77] text-white border-none px-3 py-2 rounded-full text-base mt-3 cursor-pointer transition-colors duration-300">Edit Patient</a>
-                    @endif
-                    
-                    <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center" style="padding-top: 8rem;">
-                        <h4 class="fw-bold mb-1 mt-5 text-center text-white">
-                            {{ $patient->last_name }}, {{ $patient->first_name }} {{ $patient->middle_name }}
-                        </h4>
-                        <div class="p-1 text-center text-white">
-                            <p class="mb-0 fs-5">Age: {{ \Carbon\Carbon::parse($patient->birth_date)->age }} years old</p>
-                        </div>
-                        <div class="p-1 text-center text-white">
-                            <p class="mb-0 fs-5">Sex: {{ $patient->gender }}</p>
-                        </div>
-                        <div class="p-1 text-center text-white">
-                            <p class="mb-0 fs-5">Status: {{ $patient->marital_status }}</p>
-                        </div>
-                        <div class="p-1 text-center text-white">
-                            <p class="mb-0 fs-5">Religion: {{ $patient->religion }}</p>
-                        </div>
-                        <div class="bg-light p-1 rounded border text-center">
-                            <p class="mb-0 fs-5">{{ $patient->reference_number ?? 'Not set' }}</p>
-                        </div>
-                        <p class="pt-3 text-white mb-2 text-center fs-5">
-                            Diagnosis
-                            <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#diagnosisModal">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
-                        </p>
-                        <p class="text-center text-white fs-5">{{ $patient->diagnosis ?? 'Diagnosis not set'}}</p>
-                    </div>
-                </div>
+        <div class="mx-auto px-20 pt-10">
+            <!-- Back to Patient List Button -->
+            <a href="{{ route('patients.index') }}">
+                <button type="button" class="mb-3 border border-white text-white hover:bg-[#1A5D77] hover:text-white transition-colors duration-300 rounded-full px-3 py-1">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                 </button>
+             </a>
+             
+            <div class="cardTop p-4 border-0" style="width: 100%; border-radius: 1rem; height: fit-content">
+                <div class="row g-4 h-fit">
+                    <!-- Left Section (Profile Image & Basic Info) -->
+                    <div class="col-md-3 text-left border-end h-100" style="border-radius: 8px;">
+                        <div class="bg-white rounded-2xl p-4 flex items-center space-x-6">
+                            <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center">
+                            
+                            @if(auth()->user()->role === 'bhw_s3' || auth()->user()->role === 'bhw_s6' || auth()->user()->role === 'doctor' || auth()->user()->role === 'admin')
+                                <a href="{{ route('patients.edit', $patient->id) }}"
+                                    class="flex items-center justify-center h-10 w-100 mx-auto 
+                                            bg-[#1A5D77] hover:bg-[#7CAD3E] text-white 
+                                            border-none py-3 rounded-full text-sm 
+                                            mt-2 cursor-pointer transition-colors duration-300">
 
-                <!-- Right Section -->
-                <div class="col-md-9" style="border-left: 1px solid black;">
-                    <!-- Consultation Info Banner -->
-                    <div class="alert alert-info mb-3">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <div>
-                                <strong>Consultation-Based Measurements:</strong> Each tab represents a specific consultation session with independent measurement records.
-                                <br><small class="text-muted">Dates can be manually edited to match actual consultation schedules.</small>
-                            </div>
-                        </div>
-                    </div>
+                                    <!-- Icon (left side) -->
+                                    <i class="fa-solid fa-user-pen px-2"></i>
 
-                    <!-- Tab Navigation -->
-                    <ul class="nav nav-tabs" id="measurementsTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1-content" type="button" role="tab" aria-controls="tab1-content" aria-selected="true" data-consultation-id="{{ $consultation1?->id }}" data-consultation-number="{{ $consultation1?->consultation_number }}">
-                                <div class="d-flex flex-column align-items-center">
-                                    <small class="text-dark mb-1">Consultation {{ $consultation1?->consultation_number ?? '1' }}</small>
-                                    <span class="tab-date fw-semibold">{{ \Carbon\Carbon::parse($tab1Date)->format('M d, Y') }}</span>
-                                    @if($consultation1?->hasMeasurementData())
-                                        <span class="badge bg-success mt-1" style="font-size: 0.6rem;">Has Data</span>
-                                    @else
-                                        <span class="badge bg-warning text-dark mt-1" style="font-size: 0.6rem;">No Data</span>
-                                    @endif
+                                    Edit Patient Details
+                                </a>
+                            @endif
+
+                            @if($patient->image_path)
+                                <img src="{{ asset($patient->image_path) }}" alt="Patient Photo"
+                                    class="patient-photo mt-4"
+                                    style="width: 160px; height: 160px; object-fit: cover; border-radius: 50%; border: 6px solid #7CAD3E;"
+                                    onclick="viewPatientImage('{{ asset($patient->image_path) }}', '{{ $patient->first_name }} {{ $patient->last_name }}')"
+                                    title="Click to view larger image">
+                            @else
+                                <div class="no-photo-placeholder mt-4"
+                                    style="width: 160px; height: 160px; border-radius: 50%; background-color: #f8f9fa; border: 6px dashed #dee2e6; display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-user text-muted" style="font-size: 64px;"></i>
                                 </div>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2-content" type="button" role="tab" aria-controls="tab2-content" aria-selected="false" data-consultation-id="{{ $consultation2?->id }}" data-consultation-number="{{ $consultation2?->consultation_number }}">
-                                <div class="d-flex flex-column align-items-center">
-                                    <small class="text-dark mb-1">Consultation {{ $consultation2?->consultation_number ?? '2' }}</small>
-                                    <span class="tab-date fw-semibold">{{ \Carbon\Carbon::parse($tab2Date)->format('M d, Y') }}</span>
-                                    @if($consultation2?->hasMeasurementData())
-                                        <span class="badge bg-success mt-1" style="font-size: 0.6rem;">Has Data</span>
-                                    @else
-                                        <span class="badge bg-warning text-dark mt-1" style="font-size: 0.6rem;">No Data</span>
-                                    @endif
+                            @endif
+
+                                <!-- Patient Name -->
+                                <h4 class="d-inline-block py-4 text-center fw-bold text-uppercase">
+                                    <span class="text-black text-3xl md:text-2xl font-extrabold uppercase">
+                                        <strong>{{ $patient->last_name }}, {{ $patient->first_name }} {{ $patient->middle_name }}</strong>
+                                    </span>
+                                </h4>
+
+                                <div class="flex justify-center gap-3 mb-3">
+                                    <div class="w-10 h-10 rounded-full bg-gray-300"></div>
+                                    <div class="w-10 h-10 rounded-full bg-gray-300"></div>
+                                    <div class="w-10 h-10 rounded-full bg-gray-300"></div>
+                                    <div class="w-10 h-10 rounded-full bg-gray-300"></div>
+                                    <div class="w-10 h-10 rounded-full bg-gray-300"></div>
                                 </div>
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3-content" type="button" role="tab" aria-controls="tab3-content" aria-selected="false" data-consultation-id="{{ $consultation3?->id }}" data-consultation-number="{{ $consultation3?->consultation_number }}">
-                                <div class="d-flex flex-column align-items-center">
-                                    <small class="text-dark mb-1">Consultation {{ $consultation3?->consultation_number ?? '3' }}</small>
-                                    <span class="tab-date fw-semibold">{{ \Carbon\Carbon::parse($tab3Date)->format('M d, Y') }}</span>
-                                    @if($consultation3?->hasMeasurementData())
-                                        <span class="badge bg-success mt-1" style="font-size: 0.6rem;">Has Data</span>
-                                    @else
-                                        <span class="badge bg-warning text-dark mt-1" style="font-size: 0.6rem;">No Data</span>
-                                    @endif
-                                </div>
-                            </button>
-                        </li>
-                    </ul>
 
-                    @if(auth()->user()->role === 'bhw_s3' | auth()->user()->role === 'bhw_s4' | auth()->user()->role === 'bhw_s5' | auth()->user()->role === 'bhw_s6' | auth()->user()->role === 'doctor' | auth()->user()->role === 'admin')
-                    <!-- Tab Content -->
-                    <div class="tab-content" id="measurementsTabContent">
-                        <!-- Tab 1 Content -->
-                        <div class="tab-pane fade show active" id="tab1-content" role="tabpanel" aria-labelledby="tab1-tab">
-                            <div class="consultation-header mb-3 mt-2">
-                                <h6 class="text-white mb-1">
-                                    <i class="fas fa-calendar-check me-1"></i>
-                                    Consultation {{ $consultation1?->consultation_number ?? '1' }} - {{ \Carbon\Carbon::parse($tab1Date)->format('F d, Y') }}
-                                    @if($consultation1)
-                                        <small class="text-info">(ID: {{ $consultation1->id }})</small>
-                                    @endif
-                                </h6>
-                            </div>
-                            <!-- Anthropometric Measurements Section -->
-                            <x-anthropometric-measurements 
-                                :tabNumber="1" 
-                                :consultation="$consultation1" 
-                                :measurements="$tab1Measurements" 
-                                :patient="$patient" 
-                            />
-                            <!-- Vital Signs Section -->
-                            <x-vital-signs 
-                                :tabNumber="1" 
-                                :consultation="$consultation1" 
-                                :measurements="$tab1Measurements" 
-                                :patient="$patient" 
-                            />
-                        </div>
+                                <!-- Reference Number -->
+                                <h4 class="d-flex justify-content-between align-items-center py-3 border-bottom border-top border-gray w-100">
+                                    <span style="color: #696969;">Reference Number:</span>
+                                    <span class="text-black">{{ $patient->reference_number ?? 'Not set' }}</span>
+                                </h4>
 
-                        <!-- Tab 2 Content (Hidden by default) -->
-                        <div class="tab-pane fade" id="tab2-content" role="tabpanel" aria-labelledby="tab2-tab">
-                            <div class="consultation-header mb-3 mt-2">
-                                <h6 class="text-white mb-1">
-                                    <i class="fas fa-calendar-check me-1"></i>
-                                    Consultation {{ $consultation2?->consultation_number ?? '2' }} - {{ \Carbon\Carbon::parse($tab2Date)->format('F d, Y') }}
-                                    @if($consultation2)
-                                        <small class="text-info">(ID: {{ $consultation2->id }})</small>
-                                    @endif
-                                </h6>
-                            </div>
-                            <!-- Anthropometric Measurements Section -->
-                            <x-anthropometric-measurements 
-                                :tabNumber="2" 
-                                :consultation="$consultation2" 
-                                :measurements="$tab2Measurements" 
-                                :patient="$patient" 
-                            />
-                            <!-- Vital Signs Section -->
-                            <x-vital-signs 
-                                :tabNumber="2" 
-                                :consultation="$consultation2" 
-                                :measurements="$tab2Measurements" 
-                                :patient="$patient" 
-                            />
-                        </div>
+                                <!-- Age -->
+                                <h4 class="d-flex justify-content-between align-items-center py-2 pt-3 w-100">
+                                    <span style="color: #696969;">Age: </span>
+                                    <span class="text-black uppercase">
+                                        {{ \Carbon\Carbon::parse($patient->birth_date)->age }}  years old 
+                                    </span>
+                                </h4>
 
-                        <!-- Tab 3 Content (Hidden by default) -->
-                        <div class="tab-pane fade" id="tab3-content" role="tabpanel" aria-labelledby="tab3-tab">
-                            <div class="consultation-header mb-3 mt-2">
-                                <h6 class="text-white mb-1">
-                                    <i class="fas fa-calendar-check me-1"></i>
-                                    Consultation {{ $consultation3?->consultation_number ?? '3' }} - {{ \Carbon\Carbon::parse($tab3Date)->format('F d, Y') }}
-                                    @if($consultation3)
-                                        <small class="text-info">(ID: {{ $consultation3->id }})</small>
-                                    @endif
-                                </h6>
+                                <!-- Sex -->
+                                <h4 class="d-flex justify-content-between align-items-center py-2  w-100">
+                                    <span style="color: #696969;">Sex: </span>
+                                    <span class="text-black uppercase">
+                                        {{ $patient->gender }}
+                                    </span>
+                                </h4>
+
+                                <!-- Marital Status -->
+                                <h4 class="d-flex justify-content-between align-items-center py-2 w-100">
+                                    <span style="color: #696969;">Status:</span>
+                                    <span class="text-black uppercase">
+                                        {{ $patient->marital_status }}
+                                    </span>
+                                </h4>
+
+                                <!-- Religion -->
+                                <h4 class="d-flex justify-content-between align-items-center py-2 w-100">
+                                    <span style="color: #696969;">Religion:</span>
+                                    <span class="text-black uppercase">
+                                        {{ $patient->religion }}
+                                    </span>
+                                </h4>
+                                
+                                <!-- Occupation -->
+                                <h4 class="d-flex justify-content-between align-items-center py-2 pb-3 border-bottom border-gray w-100">
+                                    <span style="color: #696969;">Occupation:</span>
+                                    <span class="text-black uppercase">
+                                        {{ $patient->occupation }}
+                                    </span>
+                                </h4>
+
+                                <!-- Diabetes Status -->
+                                <h4 class="d-flex justify-content-between align-items-center py-2 pt-3 w-100">
+                                    <span style="color: #696969;">Diabetes Status:</span>
+                                </h4>
+                                <button 
+                                        type="button" 
+                                        class="btn btn-sm text-white text-uppercase fw-extrsabold px-3 mb-1 rounded w-100 h-10"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#diabetesStatusModal"
+                                        style="
+                                            @if($patient->diabetes_status == 'Not Diabetic') background-color: #668E33;
+                                            @elseif($patient->diabetes_status == 'Prediabetes') background-color: #DE7E17;
+                                            @elseif($patient->diabetes_status == 'DM Type I') background-color: #25628D; 
+                                            @elseif($patient->diabetes_status == 'DM Type II') background-color: #922222; 
+                                            @elseif($patient->diabetes_status == 'Gestational DM') background-color: #5D1241; 
+                                            @elseif($patient->diabetes_status == 'Other Hyperglycemic States') background-color: #313131; 
+                                            @elseif($patient->diabetes_status == 'Pending') background-color: #690B46; 
+                                            @endif
+                                        "
+                                    >
+                                        <strong>{{ $patient->diabetes_status }}</strong>
+                                </button>
                             </div>
-                            <!-- Anthropometric Measurements Section -->
-                            <x-anthropometric-measurements 
-                                :tabNumber="3" 
-                                :consultation="$consultation3" 
-                                :measurements="$tab3Measurements" 
-                                :patient="$patient" 
-                            />
-                            <!-- Vital Signs Section -->
-                            <x-vital-signs 
-                                :tabNumber="3" 
-                                :consultation="$consultation3" 
-                                :measurements="$tab3Measurements" 
-                                :patient="$patient" 
-                            />
                         </div>
                     </div>
-                    @endif
+
+                    <!-- Right Section -->
+                    <div class="col-md-9 text-left border-end p-0 pr-3">
+                        <!-- Top Row: Consultation Tab Navigation -->
+                        <div class="col-md-12 px-0">
+                            <div class="p-3 bg-light rounded-2xl">
+                                <ul class="nav nav-tabs flex-row m-0 p-0" id="measurementsTab" role="tablist">
+                                    <li class="nav-item col m-0 p-0" role="presentation">
+                                        <button class="nav-link active w-100" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1-content" type="button" role="tab" aria-controls="tab1-content" aria-selected="true" data-consultation-id="{{ $consultation1?->id }}" data-consultation-number="{{ $consultation1?->consultation_number }}">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <small class="text-dark mb-1">Consultation {{ $consultation1?->consultation_number ?? '1' }}</small>
+                                                <span class="tab-date fw-bold"  style="font-size: 1.1rem;">{{ \Carbon\Carbon::parse($tab1Date)->format('F d, Y') }}</span>
+                                                @if($consultation1?->hasMeasurementData())
+                                                    <span class="badge  bg-success text-white mt-1" style="font-size: 0.6rem;">✓ Has Data</span>
+                                                @else
+                                                    <span class="badge bg-warning text-black mt-1" style="font-size: 0.6rem;">No Data</span>
+                                                @endif
+                                            </div>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item col m-0 p-0" role="presentation">
+                                        <button class="nav-link w-100" id="tab2-tab" data-bs-toggle="tab" data-bs-target="#tab2-content" type="button" role="tab" aria-controls="tab2-content" aria-selected="false" data-consultation-id="{{ $consultation2?->id }}" data-consultation-number="{{ $consultation2?->consultation_number }}">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <small class="text-dark mb-1">Consultation {{ $consultation2?->consultation_number ?? '2' }}</small>
+                                                <span class="tab-date fw-bold"  style="font-size: 1.1rem;">{{ \Carbon\Carbon::parse($tab2Date)->format('F d, Y') }}</span>
+                                                @if($consultation2?->hasMeasurementData())
+                                                    <span class="badge bg-success text-white mt-1" style="font-size: 0.6rem;">Has Data</span>
+                                                @else
+                                                    <span class="badge bg-warning text-black mt-1" style="font-size: 0.6rem;">No Data</span>
+                                                @endif
+                                            </div>
+                                        </button>
+                                    </li>
+                                    <li class="nav-item col m-0 p-0" role="presentation">
+                                        <button class="nav-link w-100" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3-content" type="button" role="tab" aria-controls="tab3-content" aria-selected="false" data-consultation-id="{{ $consultation3?->id }}" data-consultation-number="{{ $consultation3?->consultation_number }}">
+                                            <div class="d-flex flex-column align-items-center">
+                                                <small class="text-dark mb-1">Consultation {{ $consultation3?->consultation_number ?? '3' }}</small>
+                                                <span class="tab-date fw-bold"  style="font-size: 1.1rem;">{{ \Carbon\Carbon::parse($tab3Date)->format('F d, Y') }}</span>
+                                                @if($consultation3?->hasMeasurementData())
+                                                    <span class="badge bg-success text-white mt-1" style="font-size: 0.6rem;">Has Data</span>
+                                                @else
+                                                    <span class="badge bg-warning text-black mt-1" style="font-size: 0.6rem;">No Data</span>
+                                                @endif
+                                            </div>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Row: Tab Content -->
+                        <div class="col-md-12 px-0 mt-3">
+                            <div class="p-3 bg-light rounded-2xl">
+                                <div class="col-md-12">
+                                    @if(auth()->user()->role === 'bhw_s3' || auth()->user()->role === 'bhw_s4' || auth()->user()->role === 'bhw_s5' || auth()->user()->role === 'bhw_s6' || auth()->user()->role === 'doctor' || auth()->user()->role === 'admin')
+                                    <div class="tab-content" id="measurementsTabContent">
+                                        <div class="tab-pane fade show active" id="tab1-content" role="tabpanel" aria-labelledby="tab1-tab">
+                                            
+                                            <div class="consultation-header mb-3 mt-2">
+                                                <h6 class="text-black mb-1">
+                                                    <i class="fas fa-calendar-check me-1"></i>
+                                                    Consultation {{ $consultation1?->consultation_number ?? '1' }} - <strong>{{ \Carbon\Carbon::parse($tab1Date)->format('F d, Y') }}</strong>
+                                                </h6>
+                                            </div>
+
+                                            <div class="flex">
+                                                <x-anthropometric-measurements :tabNumber="1" :consultation="$consultation1" :measurements="$tab1Measurements" :patient="$patient"/>
+                                                <x-vital-signs :tabNumber="1" :consultation="$consultation1" :measurements="$tab1Measurements" :patient="$patient"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="tab2-content" role="tabpanel" aria-labelledby="tab2-tab">
+                                            <div class="consultation-header mb-3 mt-2">
+                                                <h6 class="text-black mb-1">
+                                                    <i class="fas fa-calendar-check me-1"></i>
+                                                    Consultation {{ $consultation2?->consultation_number ?? '2' }} - <strong>{{ \Carbon\Carbon::parse($tab2Date)->format('F d, Y') }}</strong>
+                                                </h6>
+                                            </div>
+                                            
+                                            <div class="flex">
+                                                <x-anthropometric-measurements :tabNumber="2" :consultation="$consultation2" :measurements="$tab2Measurements" :patient="$patient"/>
+                                                <x-vital-signs :tabNumber="2" :consultation="$consultation2" :measurements="$tab2Measurements" :patient="$patient"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="tab-pane fade" id="tab3-content" role="tabpanel" aria-labelledby="tab3-tab">
+                                            <div class="consultation-header mb-3 mt-2">
+                                                <h6 class="text-black mb-1">
+                                                    <i class="fas fa-calendar-check me-1"></i>
+                                                    Consultation {{ $consultation3?->consultation_number ?? '3' }} - <strong>{{ \Carbon\Carbon::parse($tab3Date)->format('F d, Y') }}</strong>
+                                                </h6>
+                                            </div>
+
+                                            <div class="flex">
+                                                <x-anthropometric-measurements :tabNumber="3" :consultation="$consultation3" :measurements="$tab3Measurements" :patient="$patient"/>
+                                                <x-vital-signs :tabNumber="3" :consultation="$consultation3" :measurements="$tab3Measurements" :patient="$patient"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                   
                 </div>
             </div>
         </div>
@@ -466,7 +568,7 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link-bot" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">LD Screening Tools</button>
                             </li>
-
+                            
                             @if(auth()->user()->role !== 'bhw_s5')
                                 <li class="nav-item" role="presentation">
                                     <button class="nav-link-bot" id="comprehensive-history-tab" data-bs-toggle="tab" data-bs-target="#comprehensive-history-tab-pane" type="button" role="tab" aria-controls="comprehensive-history-tab-pane" aria-selected="false">History</button>
@@ -707,7 +809,7 @@
                                     <label class="form-label">Carbohydrates (g)</label>
                                     <input type="number" id="carbohydrates" class="form-control" name="carbohydrates" required>
                                 </div>
-                                <button type="submit" id="saveMealPlanBtn" class="btn btn-success">Save Meal Plan</button>
+                                <button type="button" id="saveMealPlanBtn" class="btn btn-success">Save Meal Plan</button>
                             </form>
                         </div>
                     </div>
@@ -773,6 +875,20 @@
         </div>
     </div>
 
+    <!-- Image View Modal -->
+    <div class="modal fade image-modal" id="imageViewModal" tabindex="-1" aria-labelledby="imageViewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageViewModalLabel">Patient Photo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalPatientImage" src="" alt="Patient Photo">
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -909,10 +1025,12 @@
                             const displayValue = newValue === '' ? 'N/A' : newValue;
 
                             $measurement.html(displayValue).css({
-                                'background': 'rgba(39, 174, 96, 0.2)',
-                                'border-radius': '4px',
-                                'padding': '2px 4px',
-                                'transition': 'all 0.3s ease'
+                                'background: white';
+                                'padding: 12px 15px';
+                                'border: 2px solid #e9ecef';
+                                'border-radius: 8px';
+                                'min-height: 20px';
+                                'color: #6c757d';
                             });
 
                             // Flash effect
@@ -1039,29 +1157,6 @@
             }, 500);
         });
 
-        // Enhanced hover effects for measurements (but no double-click editing - use Edit Mode buttons instead!)
-        $('.editable-measurement').hover(
-            function() {
-                if (!$(this).closest('.measurement-section').hasClass('edit-mode')) {
-                    $(this).css({
-                        'background': 'rgba(255, 255, 255, 0.1)',
-                        'border-radius': '4px',
-                        'padding': '2px 4px',
-                        'cursor': 'default',
-                        'transition': 'all 0.3s ease'
-                    });
-                }
-            },
-            function() {
-                if (!$(this).closest('.measurement-section').hasClass('edit-mode')) {
-                    $(this).css({
-                        'background': 'transparent',
-                        'padding': '0'
-                    });
-                }
-            }
-        );
-
         $('#tdeeForm').on('submit', function(e) {
             e.preventDefault();
 
@@ -1147,33 +1242,6 @@
         $(".open-add-meal-modal").click(function () {
             $("#mealPlanModal").modal("hide");
             $("#addMealPlanModal").modal("show");
-        });
-
-        // Save new meal plan
-        $("#saveMealPlanBtn").click(function () {
-            let formData = {
-                patient_id: $("#patient_id").val(),
-                meal_type: $("#meal_type").val(),
-                protein: $("#protein").val(),
-                fat: $("#fat").val(),
-                carbohydrates: $("#carbohydrates").val(),
-                date: $("#mealPlanDate").val(),
-                _token: $('meta[name="csrf-token"]').attr("content"), // Include CSRF token
-            };
-
-            $.ajax({
-                url: "/save-meal-plan", // Ensure this matches your web.php route
-                type: "POST",
-                data: formData,
-                success: function (response) {
-                    alert("Meal Plan saved successfully!");
-                    // $("#mealPlanModal").modal("hide");
-                    // location.reload();
-                },
-                error: function (xhr) {
-                    alert("Error saving meal plan: " + xhr.responseText);
-                },
-            });
         });
 
         // Diabetes Status form submission
@@ -1268,6 +1336,53 @@
             });
         }
     });
+
+    $("#saveMealPlanBtn").click(function () {
+        let formData = {
+            patient_id: $("#patient_id").val(),
+            meal_type: $("#meal_type").val(),
+            protein: $("#protein").val(),
+            fat: $("#fat").val(),
+            carbohydrates: $("#carbohydrates").val(),
+            date: $("#mealPlanDate").val(),
+            _token: $('meta[name="csrf-token"]').attr("content") // required for 419 fix
+        };
+
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+            }
+        });
+
+
+        $.ajax({
+            url: "/save-meal-plan",   // ✅ matches your route
+            type: "POST",
+            data: formData,
+            success: function (response) {
+                alert("Meal Plan Saved Successfully!");
+                $("#addMealPlanModal").modal("hide");
+                $("#addMealPlanForm")[0].reset();
+            },
+            error: function (xhr) {
+                console.error("Error:", xhr.responseText);
+                alert("Failed to save meal plan.");
+            }
+        });
+    });
+
+    // Function to view patient image in modal
+    function viewPatientImage(imagePath, patientName) {
+            // Set the modal title with patient name
+            document.getElementById('imageViewModalLabel').textContent = `Photo of ${patientName}`;
+
+            // Set the image source
+            document.getElementById('modalPatientImage').src = imagePath;
+
+            // Show the modal
+            const modal = new bootstrap.Modal(document.getElementById('imageViewModal'));
+            modal.show();
+        }   
     </script>
 
 </x-app-layout>

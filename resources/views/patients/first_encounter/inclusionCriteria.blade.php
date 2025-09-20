@@ -49,7 +49,7 @@
 
             <!-- 4. Laboratory finding HbA1c or RBS -->
             <div class="mb-4">
-                <label class="block font-medium text-gray-700">Laboratory finding (HbA1c >6.5% or RBS ≥200 mg/dL):</label>
+                <label class="block font-medium text-gray-700">Laboratory finding (FBS ≥ 126 or RBS ≥200 mg/dL):</label>
                 <select name="laboratory_finding" class="w-full px-4 py-2 border rounded-lg">
                     <option value="1">Yes</option>
                     <option value="0">No</option>
@@ -59,7 +59,7 @@
             <!-- HbA1c Result -->
             <div class="mb-4">
                 <label class="block font-medium text-gray-700">FBS result (mg/dL):</label>
-                <input type="number" name="hba1c_result" class="w-full px-4 py-2 border rounded-lg" step="0.1" min="0">
+                <input type="number" name="fbs_result" class="w-full px-4 py-2 border rounded-lg" step="0.1" min="0">
                 <small class="text-gray-500">Normal: Below 100 mg/dL, Prediabetes: 100 - 126 mg/dL, Diabetes: 127 mg/dL or higher</small>
             </div>
 
@@ -164,8 +164,8 @@ $(document).ready(function() {
     });
 
     function displayAnswers(data) {
-    // Define the HbA1c result categories
-    let hba1cCondition = getHbA1cCondition(data.hba1c_result);
+    // Define the fbs result categories
+    let fbsCondition = getfbsCondition(data.fbs_result);
 
     // Define the RBS result categories
     let rbsCondition = getRbsCondition(data.rbs_result);
@@ -176,7 +176,7 @@ $(document).ready(function() {
         <p><strong>Consent for Info:</strong> ${data.consent_for_info == 1 ? 'Yes' : 'No'}</p>
         <p><strong>Consent for Teleconsultation:</strong> ${data.consent_for_teleconsultation == 1 ? 'Yes' : 'No'}</p>
         <p><strong>Laboratory Finding:</strong> ${data.laboratory_finding == 1 ? 'Yes' : 'No'}</p>
-        <p><strong>FBS Result:</strong> ${data.hba1c_result} (${hba1cCondition})</p>
+        <p><strong>FBS Result:</strong> ${data.fbs_result} (${fbsCondition})</p>
         <p><strong>RBS Result:</strong> ${data.rbs_result} (${rbsCondition})</p>
         <p><strong>Polyuria:</strong> ${data.polyuria == 1 ? 'Yes' : 'No'}</p>
         <p><strong>Polydipsia:</strong> ${data.polydipsia == 1 ? 'Yes' : 'No'}</p>
@@ -187,10 +187,10 @@ $(document).ready(function() {
 }
 
 // Function to determine HbA1c result condition
-function getHbA1cCondition(hba1c) {
-    if (hba1c < 5.7) {
+function getfbsCondition(fbs) {
+    if (fbs < 100) {
         return 'Normal';
-    } else if (hba1c >= 5.7 && hba1c < 6.5) {
+    } else if (fbs >= 100 && fbs < 126) {
         return 'Prediabetes';
     } else {
         return 'Diabetes';

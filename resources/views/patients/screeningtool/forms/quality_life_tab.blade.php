@@ -125,11 +125,11 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="QualityOfLifeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="QualityOfLifeModal" tabindex="-1" aria-labelledby="QualityOfModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Quality of Life Questionnaire</h5>
+                <h5 class="modal-title" id="QualityofLifeModalLabel">Quality of Life Questionnaire</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('consent_for_info')->default(false);  // Consent to provide information
             $table->boolean('consent_for_teleconsultation')->default(false);  // Consent for teleconsultation
             $table->boolean('laboratory_finding')->default(false);  // Lab result criteria
-            $table->float('hba1c_result')->nullable();  // HbA1c result
+            $table->float('fbs_result')->nullable();  // FBS result
             $table->integer('rbs_result')->nullable();  // RBS result
             $table->boolean('polyuria')->default(false);  // Polyuria
             $table->boolean('polydipsia')->default(false);  // Polydipsia

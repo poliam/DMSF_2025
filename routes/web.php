@@ -70,7 +70,6 @@ Route::middleware(['auth', 'role:bhw_s1|admin|doctor'])->group(function () {
     Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
 
     // First encounter
-    Route::get('/informed-consent/check/{patientId}', [InformedConsentController::class, 'checkConsentSubmitted'])->name('informed_consent.check');
     Route::post('/informed-consent/store', [InformedConsentController::class, 'store'])->name('informed_consent.store');
     Route::post('/first-encounter-screening/store', [ResearchEligibilityController::class, 'storeFirstEncounter'])->name('first-encounter-screening.store');
 });
@@ -88,12 +87,16 @@ Route::middleware(['auth', 'role:bhw_s3|bhw_s4|bhw_s5|bhw_s6|admin|doctor'])->gr
     Route::post('/patients/{patient}/update-o2-saturation', [PatientController::class, 'updateO2Saturation'])->name('patients.update-o2-saturation');
     Route::post('/patients/{patient}/update-respiratory-rate', [PatientController::class, 'updateRespiratoryRate'])->name('patients.update-respiratory-rate');
     Route::post('/patients/{patient}/update-blood-pressure', [PatientController::class, 'updateBloodPressure'])->name('patients.update-blood-pressure');
+
+    Route::post('/patients/{patient}/update-measurement', [PatientController::class, 'updateMeasurement'])->name('patients.update-measurement');
+    Route::post('/patients/{patient}/update-measurement-date', [PatientController::class, 'updateMeasurementDate'])->name('patients.update-measurement-date');
+    Route::get('/patients/{patient}/measurements/{tabNumber}/{date?}', [PatientController::class, 'getMeasurementsForTab'])->name('patients.get-measurements-for-tab');
+    Route::get('/patients/{patient}/measurements/{tab}', [PatientController::class, 'getMeasurementsForTab'])->name('patients.get-measurements');
+
 });
 
 Route::middleware(['auth', 'role:bhw_s4|bhw_s5|bhw_s6|admin|doctor'])->group(function () {
     // First encounter
-    Route::get('/informed-consent/check/{patientId}', [InformedConsentController::class, 'checkConsentSubmitted'])->name('informed_consent.check');
-    Route::post('/informed-consent/store', [InformedConsentController::class, 'store'])->name('informed_consent.store');
     Route::get('/research-eligibility/{patientId}', [ResearchEligibilityController::class, 'showForm'])->name('research_eligibility.show');
     Route::post('/research-eligibility/store', [ResearchEligibilityController::class, 'store'])->name('research_eligibility.store');
     Route::get('/research-eligibility/check/{patientId}', [ResearchEligibilityController::class, 'check'])->name('research_eligibility.check');
@@ -127,10 +130,7 @@ Route::middleware(['auth', 'role:bhw_s5|bhw_s6|admin|doctor'])->group(function (
     Route::get('/physical-activity', [PhysicalActivityController::class, 'get_lists'])->name('physical-activity.get_lists');
     
     // Tab-specific measurement routes
-    Route::post('/patients/{patient}/update-measurement', [PatientController::class, 'updateMeasurement'])->name('patients.update-measurement');
-    Route::post('/patients/{patient}/update-measurement-date', [PatientController::class, 'updateMeasurementDate'])->name('patients.update-measurement-date');
-    Route::get('/patients/{patient}/measurements/{tabNumber}/{date?}', [PatientController::class, 'getMeasurementsForTab'])->name('patients.get-measurements-for-tab');
-    Route::get('/patients/{patient}/measurements/{tab}', [PatientController::class, 'getMeasurementsForTab'])->name('patients.get-measurements');
+    
     Route::get('/patient/{patient_id}/macronutrients', [PatientController::class, 'getMacronutrients']);
     Route::post('/patients/{id}/blood-sugar', [BloodSugarController::class, 'store'])->name('blood-sugar.store');
     Route::get('/patients/{id}/blood-sugar', [BloodSugarController::class, 'index'])->name('patients.blood-sugar.index');
@@ -259,6 +259,9 @@ Route::middleware(['auth', 'role:bhw_s5|bhw_s6|admin|doctor'])->group(function (
 });
 
 Route::middleware('auth')->group(function () {
+    // Check if informed consent have already been submitted
+    Route::get('/informed-consent/check/{patientId}', [InformedConsentController::class, 'checkConsentSubmitted'])->name('informed_consent.check');
+    
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

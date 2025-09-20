@@ -117,29 +117,83 @@
     </div>
 </div>
 
-<!--Telemedicine Perception View Modal -->
+<!-- Telemedicine Perception View Modal -->
 <div class="modal fade" id="viewTestModal" tabindex="-1" aria-labelledby="viewTestModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewTestModalLabel">Telemedicine Perception Details (<strong><span id="test-date"></span></strong>)</h5>
+                <h5 class="modal-title" id="viewTestModalLabel">
+                    Telemedicine Perception Details 
+                    (<strong><span id="data-date"></span></strong>)
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Is this the first time you are using a telemedicine app?: <strong><span id="test-first"></span></strong>  </p>
+                <p>
+                    Is this the first time you are using a telemedicine app?: 
+                    <strong><span id="data-first"></span></strong>
+                </p>
                 <hr>
-                <p>This method (telemedicine) gives the physician a good understanding of the patient’s health status.:  <strong><span id="test-q1"></span></strong></p>
+                <p>
+                    This method (telemedicine) gives the physician a good understanding 
+                    of the patient’s health status.:  
+                    <strong><span id="data-q1"></span></strong>
+                </p>
                 <hr>
-                <p>This method (telemedicine) does not violate the privacy of the patient’s medical information.:  <strong><span id="test-q2"></span></strong></p>
+                <p>
+                    This method (telemedicine) does not violate the privacy of the 
+                    patient’s medical information.:  
+                    <strong><span id="data-q2"></span></strong>
+                </p>
                 <hr>
-                <p>This method (telemedicine) is a good addition to regular care.: <strong><span id="test-q3"></span></strong></p>
+                <p>
+                    This method (telemedicine) is a good addition to regular care.: 
+                    <strong><span id="data-q3"></span></strong>
+                </p>
                 <hr>
-                <p>This method (telemedicine) saves time.: <strong><span id="test-q4"></span></strong></p>
+                <p>
+                    This method (telemedicine) saves time.: 
+                    <strong><span id="data-q4"></span></strong>
+                </p>
                 <hr>
-                <p>I would use this method (telemedicine) in the future.: <strong><span id="test-q5"></span></strong></p>
+                <p>
+                    I would use this method (telemedicine) in the future.: 
+                    <strong><span id="data-q5"></span></strong>
+                </p>
                 <hr>
-                <p>Satisfaction Level: <strong><span id="test-satisfaction"></span></strong></p>
+                <p>
+                    Satisfaction Level: 
+                    <strong><span id="data-satisfaction"></span></strong>
+                </p>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Reusable function to populate modal data
+    function populateTelemedicineModal(data) {
+        $("#data-date").text(data.date);
+        $("#data-first").text(data.firstTime);
+        $("#data-q1").text(data.q1);
+        $("#data-q2").text(data.q2);
+        $("#data-q3").text(data.q3);
+        $("#data-q4").text(data.q4);
+        $("#data-q5").text(data.q5);
+        $("#data-satisfaction").text(data.satisfaction);
+    }
+
+    $(document).on("click", ".view-details", function () {
+        let modalData = {
+            date: $(this).data("date"),
+            firstTime: $(this).data("first"),
+            q1: $(this).data("q1"),
+            q2: $(this).data("q2"),
+            q3: $(this).data("q3"),
+            q4: $(this).data("q4"),
+            q5: $(this).data("q5"),
+            satisfaction: $(this).data("satisfaction")
+        };
+        populateTelemedicineModal(modalData);
+    });
+</script>
