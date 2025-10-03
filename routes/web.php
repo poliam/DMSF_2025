@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PatientController;
@@ -24,7 +25,9 @@ use App\Http\Controllers\CAGE4AssessmentController as CAGE4;
 use App\Http\Controllers\ASSIST8AssessmentController as ASSIST8;
 use App\Http\Controllers\SubstanceScreenerRecommendationController as SubstanceRecs;
 use App\Http\Controllers\MedicineController;
+use App\Http\Controllers\MedicalCertificateController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\ReferralFormController;
 use App\Http\Controllers\PhysicalActivityController;
 use App\Http\Controllers\InformedConsentController;
 use App\Http\Controllers\ResearchEligibilityController;
@@ -92,7 +95,6 @@ Route::middleware(['auth', 'role:bhw_s3|bhw_s4|bhw_s5|bhw_s6|admin|doctor'])->gr
     Route::post('/patients/{patient}/update-measurement-date', [PatientController::class, 'updateMeasurementDate'])->name('patients.update-measurement-date');
     Route::get('/patients/{patient}/measurements/{tabNumber}/{date?}', [PatientController::class, 'getMeasurementsForTab'])->name('patients.get-measurements-for-tab');
     Route::get('/patients/{patient}/measurements/{tab}', [PatientController::class, 'getMeasurementsForTab'])->name('patients.get-measurements');
-
 });
 
 Route::middleware(['auth', 'role:bhw_s4|bhw_s5|bhw_s6|admin|doctor'])->group(function () {
@@ -102,14 +104,13 @@ Route::middleware(['auth', 'role:bhw_s4|bhw_s5|bhw_s6|admin|doctor'])->group(fun
     Route::get('/research-eligibility/check/{patientId}', [ResearchEligibilityController::class, 'check'])->name('research_eligibility.check');
     Route::post('/first-encounter-screening/store', [ResearchEligibilityController::class, 'storeFirstEncounter'])->name('first-encounter-screening.store');
 
-    
+
     // Exclusion Criteria Routes
     Route::post('/research-exclusion/store', [\App\Http\Controllers\ResearchExclusionController::class, 'store'])->name('research_exclusion.store');
     Route::get('/research-exclusion/check/{patientId}', [\App\Http\Controllers\ResearchExclusionController::class, 'check'])->name('research_exclusion.check');
     Route::get('/patients/{patient}/comprehensive-history', [ComprehensiveHistoryController::class, 'show'])->name('comprehensive-history.show');
     Route::get('/patients/{patient}/comprehensive-history/data', [ComprehensiveHistoryController::class, 'get'])->name('comprehensive-history.get');
     Route::post('/patients/{patient}/comprehensive-history', [ComprehensiveHistoryController::class, 'store'])->name('comprehensive-history.store');
-
 });
 
 
@@ -124,13 +125,13 @@ Route::middleware(['auth', 'role:bhw_s5|bhw_s6|admin|doctor'])->group(function (
     Route::get('/consultations/{consultation}/nutrition', [NutritionController::class, 'getByConsultation'])->name('nutrition.by-consultation');
     Route::get('/consultations/{consultation}/quality-of-life', [QualityOfLifeController::class, 'getByConsultation'])->name('quality-of-life.by-consultation');
     Route::get('/consultations/{consultation}/telemedicine-perception', [TelemedicinePerceptionController::class, 'getByConsultation'])->name('telemedicine-perception.by-consultation');
-    Route::get('/consultations/{consultation}/physical-activity', [PhysicalActivityController::class, 'getByConsultation'])->name('physical-activity.by-consultation');    
+    Route::get('/consultations/{consultation}/physical-activity', [PhysicalActivityController::class, 'getByConsultation'])->name('physical-activity.by-consultation');
     Route::post('/physical-activity', [PhysicalActivityController::class, 'store'])->name('physical-activity.store');
     Route::get('/physical-activity/{id}', [PhysicalActivityController::class, 'show'])->name('physical-activity.show');
     Route::get('/physical-activity', [PhysicalActivityController::class, 'get_lists'])->name('physical-activity.get_lists');
-    
+
     // Tab-specific measurement routes
-    
+
     Route::get('/patient/{patient_id}/macronutrients', [PatientController::class, 'getMacronutrients']);
     Route::post('/patients/{id}/blood-sugar', [BloodSugarController::class, 'store'])->name('blood-sugar.store');
     Route::get('/patients/{id}/blood-sugar', [BloodSugarController::class, 'index'])->name('patients.blood-sugar.index');
@@ -147,7 +148,7 @@ Route::middleware(['auth', 'role:bhw_s5|bhw_s6|admin|doctor'])->group(function (
     Route::post('/save-meal-plan', [MealPlanController::class, 'store'])->name('save-meal-plan');
     Route::post('/qualityoflife/store', [QualityOfLifeController::class, 'store'])->name('qualityoflife.store');
     Route::get('/qualityoflife/{patient_id}', [QualityOfLifeController::class, 'index'])->name('qualityoflife.index');
-	
+
     // Physical Examination Routes
     Route::post('/patients/{patient}/general-survey', [PhysicalExaminationController::class, 'storeGeneralSurvey'])->name('physical-examination.general-survey');
     Route::post('/patients/{patient}/skin-hair', [PhysicalExaminationController::class, 'storeSkinHair'])->name('physical-examination.skin-hair');
@@ -166,7 +167,7 @@ Route::middleware(['auth', 'role:bhw_s5|bhw_s6|admin|doctor'])->group(function (
     Route::post('/patients/{patient}/extremities', [PhysicalExaminationController::class, 'storeExtremities'])->name('physical-examination.extremities');
     Route::post('/patients/{patient}/nervous-system', [PhysicalExaminationController::class, 'storeNervousSystem'])->name('physical-examination.nervous-system');
 
-    
+
     // New social connectedness per-assessment routes
     Route::post('/social-initial-assessments', [SocialInitial::class, 'store'])->name('social-initial-assessments.store');
     Route::get('/social-initial-assessments/{patientId}', [SocialInitial::class, 'show'])->name('social-initial-assessments.show');
@@ -205,34 +206,34 @@ Route::middleware(['auth', 'role:bhw_s5|bhw_s6|admin|doctor'])->group(function (
 
     // Get all physical examination data
     Route::get('/patients/{patient}/physical-examination', [PhysicalExaminationController::class, 'getAll'])->name('physical-examination.get-all');
-    
+
     Route::resource('sleep-screenings', SleepScreeningController::class);
-    
+
     // Sleep Initial Assessment routes
     Route::post('/sleep-initial-assessments', [SleepInitialAssessmentController::class, 'store'])->name('sleep-initial-assessments.store');
     Route::get('/sleep-initial-assessments/{patientId}', [SleepInitialAssessmentController::class, 'show'])->name('sleep-initial-assessments.show');
     Route::put('/sleep-initial-assessments/{id}', [SleepInitialAssessmentController::class, 'update'])->name('sleep-initial-assessments.update');
-    
+
     // ISI-7 Assessment routes
     Route::post('/isi7-assessments', [ISI7AssessmentController::class, 'store'])->name('isi7-assessments.store');
     Route::get('/isi7-assessments/{patientId}', [ISI7AssessmentController::class, 'show'])->name('isi7-assessments.show');
     Route::put('/isi7-assessments/{id}', [ISI7AssessmentController::class, 'update'])->name('isi7-assessments.update');
-    
+
     // ESS-8 Assessment routes
     Route::post('/ess8-assessments', [ESS8AssessmentController::class, 'store'])->name('ess8-assessments.store');
     Route::get('/ess8-assessments/{patientId}', [ESS8AssessmentController::class, 'show'])->name('ess8-assessments.show');
     Route::put('/ess8-assessments/{id}', [ESS8AssessmentController::class, 'update'])->name('ess8-assessments.update');
-    
+
     // SHI-13 Assessment routes
     Route::post('/shi13-assessments', [SHI13AssessmentController::class, 'store'])->name('shi13-assessments.store');
     Route::get('/shi13-assessments/{patientId}', [SHI13AssessmentController::class, 'show'])->name('shi13-assessments.show');
     Route::put('/shi13-assessments/{id}', [SHI13AssessmentController::class, 'update'])->name('shi13-assessments.update');
-    
+
     // STOP-BANG Assessment routes
     Route::post('/stopbang-assessments', [STOPBANGAssessmentController::class, 'store'])->name('stopbang-assessments.store');
     Route::get('/stopbang-assessments/{patientId}', [STOPBANGAssessmentController::class, 'show'])->name('stopbang-assessments.show');
     Route::put('/stopbang-assessments/{id}', [STOPBANGAssessmentController::class, 'update'])->name('stopbang-assessments.update');
-    
+
     // Legacy sleep-assessments route for backward compatibility
     Route::post('/sleep-assessments', [SleepScreeningController::class, 'store'])->name('sleep-assessments.store');
 
@@ -254,13 +255,12 @@ Route::middleware(['auth', 'role:bhw_s5|bhw_s6|admin|doctor'])->group(function (
     Route::get('/patients/{patient}/comprehensive-history/attachments/{attachment}', [ComprehensiveHistoryAttachmentController::class, 'show'])->name('comprehensive-history-attachments.show');
     Route::delete('/patients/{patient}/comprehensive-history/attachments/{attachment}', [ComprehensiveHistoryAttachmentController::class, 'destroy'])->name('comprehensive-history-attachments.destroy');
     Route::get('/patients/{patient}/comprehensive-history/attachments/{attachment}/download', [ComprehensiveHistoryAttachmentController::class, 'download'])->name('comprehensive-history-attachments.download');
-
 });
 
 Route::middleware('auth')->group(function () {
     // Check if informed consent have already been submitted
     Route::get('/informed-consent/check/{patientId}', [InformedConsentController::class, 'checkConsentSubmitted'])->name('informed_consent.check');
-    
+
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -290,7 +290,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/social-connectedness', [SocialConnectednessController::class, 'store'])->name('submit.socialConnectedness');
     Route::get('/social-connectedness/{patient_id}', [SocialConnectednessController::class, 'show'])->name('get.socialConnectedness');
     Route::get('/social-connectedness/{patient_id}/data', [SocialConnectednessController::class, 'getDataByPatient'])->name('socialConnectedness.getDataByPatient');
-    
+
     // Substance use recommendations (backend computed)
     Route::post('/substance-recommendations', [SubstanceRecs::class, 'recommend'])->name('substance.recommendations');
     Route::get('/medicines/search', [MedicineController::class, 'getMedicines'])->name('medicines.search');
@@ -307,9 +307,29 @@ Route::middleware('auth')->group(function () {
     Route::delete('/lifestyle-prescriptions/{lifestylePrescription}', [LifestylePrescriptionController::class, 'destroy'])->name('lifestyle-prescriptions.destroy');
     Route::get('/lifestyle-prescriptions/{patientId}/download-pdf', [LifestylePrescriptionController::class, 'downloadPdf'])->name('lifestyle-prescriptions.download-pdf');
 
+    // Medical certificate routes
+    Route::post('/medical-certificates', [MedicalCertificateController::class, 'store'])->name('medical-certificates.store');
+    Route::get('/patients/{patient}/medical-certificates', [MedicalCertificateController::class, 'getByPatient'])->name('patients.medical-certificates');
+    Route::get('/medical-certificates/{id}', [MedicalCertificateController::class, 'show'])->name('medical-certificates.show');
+    Route::get('/medical-certificates/{id}/pdf', [MedicalCertificateController::class, 'viewPdf'])->name('medical-certificates.pdf');
+    Route::get('/medical-certificates/{id}/download', [MedicalCertificateController::class, 'downloadPdf'])->name('medical-certificates.download');
+    Route::put('/medical-certificates/{id}', [MedicalCertificateController::class, 'update'])->name('medical-certificates.update');
+    Route::put('/medical-certificates/{id}/revoke', [MedicalCertificateController::class, 'revoke'])->name('medical-certificates.revoke');
+
+    // Referral form routes
+    Route::post('/referral-forms', [ReferralFormController::class, 'store'])->name('referral-forms.store');
+    Route::post('/referral-forms/preview', [ReferralFormController::class, 'preview'])->name('referral-forms.preview');
+    Route::get('/patients/{patient}/referral-forms', [ReferralFormController::class, 'getByPatient'])->name('patients.referral-forms');
+    Route::get('/patients/{patient}/referral-statistics', [ReferralFormController::class, 'getStatistics'])->name('patients.referral-statistics');
+    Route::get('/referral-forms/{id}', [ReferralFormController::class, 'show'])->name('referral-forms.show');
+    Route::get('/referral-forms/{id}/print', [ReferralFormController::class, 'printPdf'])->name('referral-forms.print');
+    Route::get('/referral-forms/{id}/download', [ReferralFormController::class, 'downloadPdf'])->name('referral-forms.download');
+    Route::put('/referral-forms/{id}', [ReferralFormController::class, 'update'])->name('referral-forms.update');
+    Route::put('/referral-forms/{id}/tracking', [ReferralFormController::class, 'updateTracking'])->name('referral-forms.tracking');
+
 
     // Debug route
-    Route::get('/debug/comprehensive-history/{patient}', function(App\Models\Patient $patient) {
+    Route::get('/debug/comprehensive-history/{patient}', function (App\Models\Patient $patient) {
         $comprehensiveHistory = $patient->comprehensiveHistory()->first();
         return [
             'patient_id' => $patient->id,
@@ -329,5 +349,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
-
+require __DIR__ . '/auth.php';
