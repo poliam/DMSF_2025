@@ -57,26 +57,48 @@
             </div>
             
             <div class="row mt-3">
-                <div class="col-md-12">
+                <div class="col-md-6">
                     <div class="card border-info">
                         <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0"><i class="fas fa-chart-line me-1"></i> Monitoring Guidelines</h6>
+                            <h6 class="mb-0"><i class="fas fa-bed me-1"></i> Sleep Management</h6>
                         </div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <h6>Blood Sugar Monitoring</h6>
-                                    <div id="bloodSugarMonitoring" class="small text-muted"></div>
-                                </div>
-                                <div class="col-md-4">
-                                    <h6>Weight Management</h6>
-                                    <div id="weightManagement" class="small text-muted"></div>
-                                </div>
-                                <div class="col-md-4">
-                                    <h6>Follow-up Schedule</h6>
-                                    <div id="followUpSchedule" class="small text-muted"></div>
-                                </div>
-                            </div>
+                            <div id="sleepManagement" class="small text-muted"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card border-secondary">
+                        <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0"><i class="fas fa-brain me-1"></i> Stress Management</h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="stressManagement" class="small text-muted"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0"><i class="fas fa-users me-1"></i> Social Connectedness</h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="socialConnectedness" class="small text-muted"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card border-danger">
+                        <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0"><i class="fas fa-shield-alt me-1"></i> Substance Use</h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="substanceUse" class="small text-muted"></div>
                         </div>
                     </div>
                 </div>
@@ -135,19 +157,25 @@
                         </div>
                     </div>
                     <hr/>
-                    <h6>Monitoring Guidelines</h6>
+                    <h6 class="mb-2">Lifestyle Vital Signs</h6>
                     <div class="row">
-                        <div class="col-md-4">
-                            <label for="bloodSugarMonitoringInput" class="form-label">Blood Sugar Monitoring</label>
-                            <textarea class="form-control" id="bloodSugarMonitoringInput" name="blood_sugar_monitoring" rows="3" placeholder="• Check fasting glucose daily&#10;• Post-meal checks 2hrs after eating&#10;• Target: 80-130 mg/dL (fasting)"></textarea>
+                        <div class="col-md-6">
+                            <label for="sleepManagementInput" class="form-label">Sleep Management</label>
+                            <textarea class="form-control" id="sleepManagementInput" name="sleep_management" rows="3" placeholder="• Sleep duration: 7-9 hours nightly&#10;• Regular sleep schedule&#10;• Sleep hygiene practices"></textarea>
                         </div>
-                        <div class="col-md-4">
-                            <label for="weightManagementInput" class="form-label">Weight Management</label>
-                            <textarea class="form-control" id="weightManagementInput" name="weight_management" rows="3" placeholder="• Weekly weight monitoring&#10;• Target: 5-10% weight loss&#10;• BMI goal: 18.5-24.9"></textarea>
+                        <div class="col-md-6">
+                            <label for="stressManagementInput" class="form-label">Stress Management</label>
+                            <textarea class="form-control" id="stressManagementInput" name="stress_management" rows="3" placeholder="• Stress reduction techniques&#10;• Mindfulness/meditation&#10;• Coping strategies"></textarea>
                         </div>
-                        <div class="col-md-4">
-                            <label for="followUpScheduleInput" class="form-label">Follow-up Schedule</label>
-                            <textarea class="form-control" id="followUpScheduleInput" name="follow_up_schedule" rows="3" placeholder="• Next visit: {{ date('Y-m-d', strtotime('+4 weeks')) }}&#10;• HbA1c check: {{ date('Y-m-d', strtotime('+3 months')) }}&#10;• Emergency contact if needed"></textarea>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="socialConnectednessInput" class="form-label">Social Connectedness</label>
+                            <textarea class="form-control" id="socialConnectednessInput" name="social_connectedness" rows="3" placeholder="• Social support systems&#10;• Community involvement&#10;• Family/friend connections"></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="substanceUseInput" class="form-label">Substance Use</label>
+                            <textarea class="form-control" id="substanceUseInput" name="substance_use" rows="3" placeholder="• Alcohol consumption guidelines&#10;• Smoking cessation support&#10;• Substance use counseling"></textarea>
                         </div>
                     </div>
                 </form>
@@ -168,9 +196,10 @@
             $('#dietNotes').val('');
             $('#exerciseType').val('');
             $('#exerciseNotes').val('');
-            $('#bloodSugarMonitoringInput').val('');
-            $('#weightManagementInput').val('');
-            $('#followUpScheduleInput').val('');
+            $('#sleepManagementInput').val('');
+            $('#stressManagementInput').val('');
+            $('#socialConnectednessInput').val('');
+            $('#substanceUseInput').val('');
             $('#addLifestyleModalLabel').text('Create Lifestyle Prescription');
         }
 
@@ -185,9 +214,10 @@
                     $('#dietBodyNotes').html(latest && latest.diet_notes ? latest.diet_notes.replace(/\n/g, '<br/>') : '<span class="text-muted">No dietary notes yet.</span>');
                     $('#exerciseHeaderType').text(latest && latest.exercise_type ? `(${latest.exercise_type})` : '');
                     $('#exerciseBodyNotes').html(latest && latest.exercise_notes ? latest.exercise_notes.replace(/\n/g, '<br/>') : '<span class="text-muted">No exercise notes yet.</span>');
-                    $('#bloodSugarMonitoring').html(latest && latest.blood_sugar_monitoring ? latest.blood_sugar_monitoring.replace(/\n/g, '<br/>') : '<span class="text-muted">—</span>');
-                    $('#weightManagement').html(latest && latest.weight_management ? latest.weight_management.replace(/\n/g, '<br/>') : '<span class="text-muted">—</span>');
-                    $('#followUpSchedule').html(latest && latest.follow_up_schedule ? latest.follow_up_schedule.replace(/\n/g, '<br/>') : '<span class="text-muted">—</span>');
+                    $('#sleepManagement').html(latest && latest.sleep_management ? latest.sleep_management.replace(/\n/g, '<br/>') : '<span class="text-muted">No sleep management notes yet.</span>');
+                    $('#stressManagement').html(latest && latest.stress_management ? latest.stress_management.replace(/\n/g, '<br/>') : '<span class="text-muted">No stress management notes yet.</span>');
+                    $('#socialConnectedness').html(latest && latest.social_connectedness ? latest.social_connectedness.replace(/\n/g, '<br/>') : '<span class="text-muted">No social connectedness notes yet.</span>');
+                    $('#substanceUse').html(latest && latest.substance_use ? latest.substance_use.replace(/\n/g, '<br/>') : '<span class="text-muted">No substance use notes yet.</span>');
                 },
                 error: function() {
                     console.error('Failed to load lifestyle prescriptions');
@@ -235,9 +265,10 @@
                         $('#dietNotes').val(latest.diet_notes || '');
                         $('#exerciseType').val(latest.exercise_type || '');
                         $('#exerciseNotes').val(latest.exercise_notes || '');
-                        $('#bloodSugarMonitoringInput').val(latest.blood_sugar_monitoring || '');
-                        $('#weightManagementInput').val(latest.weight_management || '');
-                        $('#followUpScheduleInput').val(latest.follow_up_schedule || '');
+                        $('#sleepManagementInput').val(latest.sleep_management || '');
+                        $('#stressManagementInput').val(latest.stress_management || '');
+                        $('#socialConnectednessInput').val(latest.social_connectedness || '');
+                        $('#substanceUseInput').val(latest.substance_use || '');
                         $('#addLifestyleModalLabel').text('Edit Lifestyle Prescription');
                     } else {
                         resetForm();
