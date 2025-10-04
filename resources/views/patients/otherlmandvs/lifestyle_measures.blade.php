@@ -11,165 +11,108 @@
 @endphp
 
 <style>
-    .clearfix:after {
-        clear: both;
-        content: "";
-        display: block;
-        height: 0;
-    }
-
     .progress-tabs {
         padding: 20px 5%;
         position: relative;
         font-family: 'Lato', sans-serif;
     }
 
-    .progress-bar-container {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        position: relative;
+    /* Tab bar container */
+    .tab-bar-container {
         margin: 1.5rem 0;
-        max-width: 100%;
-        overflow: hidden;
     }
 
-    .progress-tabs .list-group {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: center;
-        position: relative;
-        margin: 0;
-        max-width: 100%;
+    /* Make tabs scroll horizontally on small screens */
+    .nav-tabs.flex-nowrap {
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
         flex-wrap: nowrap;
     }
 
-    .arrow-steps {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        width: 100%;
-        gap: 0;
-        margin: 0;
-    }
-
-    .arrow-steps .list-group-item {
-        font-size: 14px;
-        font-weight: 600;
-        text-align: center;
-        color: #666;
-        cursor: pointer;
-        margin: 0;
-        margin-right: -25px;
-        padding: 15px 35px 15px 35px;
-        min-width: 180px;
-        flex: 1;
-        position: relative;
-        background-color: #FFFFFF;
-        border: 1px solid #BFBFBF;
-        color: #666;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none; 
-        transition: all 0.3s ease;
+    .nav-tabs .nav-link {
         display: flex;
         align-items: center;
         justify-content: center;
+        min-width: 180px;
         height: 50px;
-        text-decoration: none;
-        max-width: 250px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        z-index: 2;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: center;
     }
 
-    /* Modern clip-path approach for clean arrow shapes */
-    .arrow-steps .list-group-item {
-        clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 0 100%, 25px 50%);
-    }
-
-    .arrow-steps .list-group-item:first-child {
-        clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 0 100%, 0 50%);
-    }
-
-    .arrow-steps .list-group-item:last-child {
-        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 25px 50%);
-    }
-
-    .arrow-steps .list-group-item span {
-        display: block;
-    }
-
-    .arrow-steps .list-group-item .step-title {
+    .nav-tabs .nav-link .step-title {
         font-weight: 600;
         font-size: 14px;
         margin-bottom: 2px;
+        line-height: 1.1;
     }
 
-    .arrow-steps .list-group-item .step-subtitle {
+    .nav-tabs .nav-link .step-subtitle {
         font-size: 11px;
         opacity: 0.8;
         font-weight: 400;
+        line-height: 1;
     }
 
-    .arrow-steps .list-group-item.active {
+    .nav-tabs .nav-link.active {
         color: #fff;
         background-color: #236477;
-        border: 1px solid #173042;
+        border-color: #173042 #173042 transparent;
     }
 
-    .arrow-steps .list-group-item.active:after {
-        border-left: 15px solid #236477;	
+    .nav-tabs .nav-link {
+        color: #236477;
     }
-
-    .arrow-steps .list-group-item.completed {
-        color: #7CAD3E;
-        background-color: #EBFCD6;
-        border: 1px solid #7CAD3E;
-    }
-
-    /* Clean modern styling without complex borders */
 
     .lifestyle-content {
         background: white;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         padding: 2rem;
-        margin-top: 2rem;
+        margin-top: 0; /* Tighten spacing since tabs already add margin */
     }
 </style>
 
 <div class="row">
     <div class="col-12">
         <div class="progress-tabs">
-            <div class="progress-bar-container">
-                <div class="list-group arrow-steps clearfix" id="lifestyle-measures-list" role="tablist">
-                <a class="list-group-item list-group-item-action active" id="list-sleep-list" data-bs-toggle="list" href="#list-sleep" role="tab" aria-controls="list-sleep">
-                    <span>
-                        <div class="step-title">Sleep Assessment</div>
-                        <div class="step-subtitle">Rest evaluation</div>
-                    </span>
-                </a>
-                <a class="list-group-item list-group-item-action" id="list-stress-management-list" data-bs-toggle="list" href="#list-stress-management" role="tab" aria-controls="list-stress-management">
-                    <span>
-                        <div class="step-title">Stress Management</div>
-                        <div class="step-subtitle">Mental health</div>
-                    </span>
-                </a>
-                <a class="list-group-item list-group-item-action" id="list-social-connectedness-list" data-bs-toggle="list" href="#list-social-connectedness" role="tab" aria-controls="list-social-connectedness">
-                    <span>
-                        <div class="step-title">Social Connectedness</div>
-                        <div class="step-subtitle">Community support</div>
-                    </span>
-                </a>
-                <a class="list-group-item list-group-item-action" id="list-substance-use-list" data-bs-toggle="list" href="#list-substance-use" role="tab" aria-controls="list-substance-use">
-                    <span>
-                        <div class="step-title">Substance Use</div>
-                        <div class="step-subtitle">Usage screening</div>
-                    </span>
-                </a>
-                </div>
+            <div class="tab-bar-container">
+                <ul class="nav nav-tabs flex-nowrap" id="lifestyle-tabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="tab-sleep" data-bs-toggle="tab" data-bs-target="#list-sleep" type="button" role="tab" aria-controls="list-sleep" aria-selected="true">
+                            <span>
+                                <div class="step-title">Sleep Assessment</div>
+                                <div class="step-subtitle">Rest evaluation</div>
+                            </span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-stress-management" data-bs-toggle="tab" data-bs-target="#list-stress-management" type="button" role="tab" aria-controls="list-stress-management" aria-selected="false">
+                            <span>
+                                <div class="step-title">Stress Management</div>
+                                <div class="step-subtitle">Mental health</div>
+                            </span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-social-connectedness" data-bs-toggle="tab" data-bs-target="#list-social-connectedness" type="button" role="tab" aria-controls="list-social-connectedness" aria-selected="false">
+                            <span>
+                                <div class="step-title">Social Connectedness</div>
+                                <div class="step-subtitle">Community support</div>
+                            </span>
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-substance-use" data-bs-toggle="tab" data-bs-target="#list-substance-use" type="button" role="tab" aria-controls="list-substance-use" aria-selected="false">
+                            <span>
+                                <div class="step-title">Substance Use</div>
+                                <div class="step-subtitle">Usage screening</div>
+                            </span>
+                        </button>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
@@ -232,62 +175,12 @@ document.addEventListener('consultationChanged', function(event) {
     document.dispatchEvent(lifestyleChangeEvent);
 });
 
-// Arrow progress bar navigation functionality
+// No extra JS required for tab switching; Bootstrap handles it via data attributes.
+// Keep consultation data available globally on initial load as well, if present.
 $(document).ready(function() {
-    // Initialize with current consultation data
     window.lifestyleMeasuresConsultation = {
         id: window.currentConsultationId,
         number: window.currentConsultationNumber
     };
-
-    // Handle tab click events for arrow progress bar
-    $('#lifestyle-measures-list .list-group-item').on('click', function(e) {
-        e.preventDefault();
-        
-        // Remove active class from all items
-        $('#lifestyle-measures-list .list-group-item').removeClass('active');
-        
-        // Add active class to clicked item
-        $(this).addClass('active');
-        
-        // Get target tab
-        const targetTab = $(this).attr('href');
-        
-        // Hide all tab panes
-        $('#lifestyle-measures-tabContent .tab-pane').removeClass('show active');
-        
-        // Show target tab pane
-        $(targetTab).addClass('show active');
-        
-        // Update progress bar visual state
-        updateProgressBarState($(this));
-    });
-
-    // Function to update progress bar visual state
-    function updateProgressBarState(activeItem) {
-        const allItems = $('#lifestyle-measures-list .list-group-item');
-        const activeIndex = allItems.index(activeItem);
-        
-        // Mark all previous items as completed
-        allItems.each(function(index) {
-            $(this).removeClass('active completed');
-            
-            if (index < activeIndex) {
-                $(this).addClass('completed');
-            } else if (index === activeIndex) {
-                $(this).addClass('active');
-            }
-        });
-    }
-
-    // Initialize first item as active
-    const firstItem = $('#lifestyle-measures-list .list-group-item:first');
-    updateProgressBarState(firstItem);
-
-    // Handle Bootstrap tab events to sync with progress bar
-    $('a[data-bs-toggle="list"]').on('shown.bs.tab', function (e) {
-        const targetItem = $(e.target);
-        updateProgressBarState(targetItem);
-    });
 });
 </script> 
