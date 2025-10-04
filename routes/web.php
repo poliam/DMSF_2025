@@ -27,6 +27,7 @@ use App\Http\Controllers\SubstanceScreenerRecommendationController as SubstanceR
 use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\MedicalCertificateController;
 use App\Http\Controllers\PrescriptionController;
+use App\Http\Controllers\ReferralFormController;
 use App\Http\Controllers\PhysicalActivityController;
 use App\Http\Controllers\InformedConsentController;
 use App\Http\Controllers\ResearchEligibilityController;
@@ -314,6 +315,26 @@ Route::middleware('auth')->group(function () {
     Route::get('/medical-certificates/{id}/download', [MedicalCertificateController::class, 'downloadPdf'])->name('medical-certificates.download');
     Route::put('/medical-certificates/{id}', [MedicalCertificateController::class, 'update'])->name('medical-certificates.update');
     Route::put('/medical-certificates/{id}/revoke', [MedicalCertificateController::class, 'revoke'])->name('medical-certificates.revoke');
+
+    // Medical certificate routes
+    Route::post('/medical-certificates', [MedicalCertificateController::class, 'store'])->name('medical-certificates.store');
+    Route::get('/patients/{patient}/medical-certificates', [MedicalCertificateController::class, 'getByPatient'])->name('patients.medical-certificates');
+    Route::get('/medical-certificates/{id}', [MedicalCertificateController::class, 'show'])->name('medical-certificates.show');
+    Route::get('/medical-certificates/{id}/pdf', [MedicalCertificateController::class, 'viewPdf'])->name('medical-certificates.pdf');
+    Route::get('/medical-certificates/{id}/download', [MedicalCertificateController::class, 'downloadPdf'])->name('medical-certificates.download');
+    Route::put('/medical-certificates/{id}', [MedicalCertificateController::class, 'update'])->name('medical-certificates.update');
+    Route::put('/medical-certificates/{id}/revoke', [MedicalCertificateController::class, 'revoke'])->name('medical-certificates.revoke');
+
+    // Referral form routes
+    Route::post('/referral-forms', [ReferralFormController::class, 'store'])->name('referral-forms.store');
+    Route::post('/referral-forms/preview', [ReferralFormController::class, 'preview'])->name('referral-forms.preview');
+    Route::get('/patients/{patient}/referral-forms', [ReferralFormController::class, 'getByPatient'])->name('patients.referral-forms');
+    Route::get('/patients/{patient}/referral-statistics', [ReferralFormController::class, 'getStatistics'])->name('patients.referral-statistics');
+    Route::get('/referral-forms/{id}', [ReferralFormController::class, 'show'])->name('referral-forms.show');
+    Route::get('/referral-forms/{id}/print', [ReferralFormController::class, 'printPdf'])->name('referral-forms.print');
+    Route::get('/referral-forms/{id}/download', [ReferralFormController::class, 'downloadPdf'])->name('referral-forms.download');
+    Route::put('/referral-forms/{id}', [ReferralFormController::class, 'update'])->name('referral-forms.update');
+    Route::put('/referral-forms/{id}/tracking', [ReferralFormController::class, 'updateTracking'])->name('referral-forms.tracking');
 
 
     // Debug route

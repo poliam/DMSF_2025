@@ -77,9 +77,10 @@ class MedicalCertificateController extends Controller
     public function downloadPdf($id)
     {
         $certificate = MedicalCertificate::with('patient')->findOrFail($id);
+        $patient = $certificate->patient;
 
-        $pdf = Pdf::loadView('patients.management.components.medical_certificate.print', compact('certificate'))
-            ->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('patients.management.components.medical_certificate_download_pdf', compact('certificate', 'patient'))
+            ->setPaper([0, 0, 612, 396], 'landscape'); // 8.5in x 5.5in in points (72 points per inch)
 
         return $pdf->download("medical_certificate_{$certificate->id}.pdf");
     }
@@ -93,9 +94,10 @@ class MedicalCertificateController extends Controller
     public function viewPdf($id)
     {
         $certificate = MedicalCertificate::with('patient')->findOrFail($id);
+        $patient = $certificate->patient;
 
-        $pdf = Pdf::loadView('patients.management.components.medical_certificate.print', compact('certificate'))
-            ->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('patients.management.components.medical_certificate_download_pdf', compact('certificate', 'patient'))
+            ->setPaper([0, 0, 612, 396], 'landscape'); // 8.5in x 5.5in in points (72 points per inch)
 
         return $pdf->stream("medical_certificate_{$certificate->id}.pdf");
     }
