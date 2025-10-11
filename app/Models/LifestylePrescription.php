@@ -11,6 +11,7 @@ class LifestylePrescription extends Model
 
     protected $fillable = [
         'patient_id',
+        'control_number',
         'diet_type',
         'diet_notes',
         'exercise_type',

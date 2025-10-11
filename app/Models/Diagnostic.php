@@ -13,6 +13,7 @@ class Diagnostic extends Model
         'patient_id',
         'diagnostic_date',
         'requesting_physician',
+        'control_number',
         'hematology',
         'clinical_microscopy',
         'blood_chemistry',

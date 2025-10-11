@@ -104,6 +104,9 @@
 		Tel No.: (082) 225-7278</p>
 		<h4>DIAGNOSTIC REQUEST</h4>
 		<p class="date">DATE: {{ \Carbon\Carbon::parse($diagnostic->diagnostic_date)->format('F j, Y') }}</p>
+		@if($diagnostic->control_number)
+			<p class="date" style="font-weight: bold; margin-top: -10px;">{{ $diagnostic->control_number }}</p>
+		@endif
 	</div>
 	<hr>
 	<table class="info-table">

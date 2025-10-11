@@ -107,6 +107,9 @@
 		Tel No.: (082) 225-7278</p>
 		<h4>LIFESTYLE PRESCRIPTION</h4>
 		<p class="date">DATE: {{ \Carbon\Carbon::parse($prescription->created_at)->format('F j, Y') }}</p>
+		@if($prescription->control_number)
+			<p class="date" style="font-weight: bold; margin-top: -10px;">{{ $prescription->control_number }}</p>
+		@endif
 	</div>
 	<hr>
 	<table class="info-table">
